@@ -48,8 +48,9 @@ body{
   .header__toggle{display:flex}
   .header__links{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg-card);flex-direction:column;justify-content:center;align-items:center;gap:24px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:105}
   .header__links--open{opacity:1;pointer-events:auto}
-  .header__link{font-size:1.2rem}
-  .header__link--lang{font-size:1rem;padding:4px 12px}
+  .header__link{font-size:1.8rem}
+  .header__link--lang{font-size:1.4rem;padding:10px 22px}
+  .header__links{gap:32px}
 }
 /* Main */
 .main{max-width:var(--max-w);margin:0 auto;padding:32px 16px 60px}
@@ -235,8 +236,9 @@ body{
 @media(max-width:380px){
   .lesson-header__title{font-size:1.25rem}
   .header__nav{padding:0 10px}
-  .header__links{gap:8px}
-  .header__link{font-size:.72rem}
+  .header__links{gap:24px}
+  .header__link{font-size:1.4rem}
+  .header__link--lang{font-size:1.1rem;padding:6px 16px}
   .categories{grid-template-columns:1fr 1fr}
   .category-card{padding:14px}
 }

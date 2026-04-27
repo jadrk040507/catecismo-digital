@@ -1,0 +1,76 @@
+---
+export interface Props {
+  title: string;
+  cic: string;
+  scripture: string;
+  level?: 'semilla' | 'brotes' | 'raiz' | 'arbol';
+}
+
+const { title, cic, scripture, level } = Astro.props;
+const levelNames: Record<string, string> = {
+  semilla: '🌱 Semilla · 7-12 años',
+  brotes: '🌿 Brotes · 13-17 años',
+  raiz: '🪴 Raíz · Adultos',
+  arbol: '🌳 Árbol · Formados',
+};
+---
+<!DOCTYPE html>
+<html lang={Astro.currentLocale || 'es'}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{title} — Catecismo Digital</title>
+  <meta name="description" content="Catequesis católica gratuita, clara y profunda para todas las edades" />
+  <link rel="icon" type="image/svg+xml" href="/catecismo-digital/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/catecismo-digital/styles/global.css" />
+</head>
+<body>
+  <header class="header">
+    <nav class="header__nav">
+      <a href="/catecismo-digital/" class="header__logo">
+        <span class="header__logo-icon">✝</span>
+        <span class="header__logo-text">Catecismo Digital</span>
+      </a>
+      <div class="header__links">
+        <a href="/catecismo-digital/" class="header__link">Inicio</a>
+        <a href="/catecismo-digital/es/credo/" class="header__link">Credo</a>
+        <a href="/catecismo-digital/es/sacramentos/" class="header__link">Sacramentos</a>
+        <a href="/catecismo-digital/es/moral/" class="header__link">Moral</a>
+        <a href="/catecismo-digital/es/oracion/" class="header__link">Oración</a>
+        <a href="/catecismo-digital/en/" class="header__link header__link--lang">EN</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="main">
+    <header class="lesson-header">
+      <div class="lesson-header__ref">
+        <span>{cic}</span>
+        <span>{scripture}</span>
+      </div>
+      <h1 class="lesson-header__title">{title}</h1>
+    
+      <div class="level-tabs">
+        <a href="#" class="level-tab level-tab--active">🌱 Todas las edades</a>
+        <a href="#" class="level-tab">🌱 Semilla</a>
+        <a href="#" class="level-tab">🌿 Brotes</a>
+        <a href="#" class="level-tab">🪴 Raíz</a>
+        <a href="#" class="level-tab">🌳 Árbol</a>
+      </div>
+    </header>
+
+    <slot />
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <p class="footer__text">Gratuito · Público · Católico · <a href="https://github.com/jadrk040507/catecismo-digital" class="footer__link">GitHub</a></p>
+      <p class="footer__text footer__text--small">Basado en el Catecismo de la Iglesia Católica · Directorio para la Catequesis (2020)</p>
+    </div>
+  </footer>
+</body>
+</html>

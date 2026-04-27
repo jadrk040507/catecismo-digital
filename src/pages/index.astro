@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Inicio">
+  <section class="hero">
+    <div class="hero__icon">✝</div>
+    <h1 class="hero__title">Catecismo Digital</h1>
+    <p class="hero__sub">
+      Un catecismo moderno, accesible y gratuito. Basado en el Catecismo de la Iglesia Católica,
+      estructurado en clases para todas las edades.
+    </p>
+    <a href="/catecismo-digital/es/credo/" class="hero__cta">Comenzar →</a>
+  </section>
+
+  <div class="categories">
+    <a href="/catecismo-digital/es/credo/" class="category-card">
+      <div class="category-card__icon">📖</div>
+      <div class="category-card__title">El Credo</div>
+      <div class="category-card__count">Lo que creemos</div>
+    </a>
+    <a href="/catecismo-digital/es/sacramentos/" class="category-card">
+      <div class="category-card__icon">🕊</div>
+      <div class="category-card__title">Sacramentos</div>
+      <div class="category-card__count">La vida de la gracia</div>
+    </a>
+    <a href="/catecismo-digital/es/moral/" class="category-card">
+      <div class="category-card__icon">🔥</div>
+      <div class="category-card__title">Moral</div>
+      <div class="category-card__count">Vivir en Cristo</div>
+    </a>
+    <a href="/catecismo-digital/es/oracion/" class="category-card">
+      <div class="category-card__icon">🙏</div>
+      <div class="category-card__title">Oración</div>
+      <div class="category-card__count">La vida de oración</div>
+    </a>
+  </div>
+</BaseLayout>

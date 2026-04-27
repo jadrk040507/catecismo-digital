@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="El Credo — Catecismo Digital">
+  <header class="lesson-header">
+    <h1 class="lesson-header__title">📖 El Credo</h1>
+    <p style="color: var(--text-soft); font-size: 1.05rem; margin-top: 8px;">
+      «Creo» — la puerta de entrada a la vida de fe. Lo que la Iglesia cree y profesa.
+    </p>
+  </header>
+
+  <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 8px;">
+    <a href="/catecismo-digital/es/credo/01-deseo-de-dios/" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); text-decoration: none; color: var(--text); transition: all 0.2s;"
+       onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size: 1.2rem;">01</span>
+      <div>
+        <div style="font-weight: 600;">El Deseo de Dios</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">CIC 27-30 · ¿Por qué buscamos?</div>
+      </div>
+    </a>
+    
+    <div style="display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); opacity: 0.5;">
+      <span style="font-size: 1.2rem;">02</span>
+      <div>
+        <div style="font-weight: 600; color: var(--text-muted);">Próximamente</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">La Revelación de Dios · CIC 50-73</div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

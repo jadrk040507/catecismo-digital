@@ -8,7 +8,6 @@ export interface Props {
 const { title, cic, scripture } = Astro.props;
 const path = Astro.url.pathname;
 const isEn = path.startsWith('/catecismo-digital/en');
-// Extract section from path and swap language
 const sections = ['credo', 'sacramentos', 'moral', 'oracion'];
 const foundSection = sections.find(s => path.includes('/' + s + '/'));
 const toggleHref = isEn
@@ -18,29 +17,21 @@ const toggleLabel = isEn ? 'ES' : 'EN';
 
 // Translation strings
 const t = {
-  siteTitle: isEn ? 'Catechism Project' : 'Proyecto Catecismo',
-  menuHome: isEn ? 'Home' : 'Inicio',
-  menuCreed: isEn ? 'Creed' : 'Credo',
-  menuSacraments: isEn ? 'Sacraments' : 'Sacramentos',
-  menuMoral: isEn ? 'Moral' : 'Moral',
-  menuPrayer: isEn ? 'Prayer' : 'Oracion',
-  footerLine1: isEn ? 'Free &middot; Public &middot; Catholic &middot;' : 'Gratuito &middot; P\u00fablico &middot; Cat\u00f3lico &middot;',
-  footerLine2: isEn ? 'Based on the Catechism of the Catholic Church &middot; Directory for Catechesis (2020)' : 'Basado en el Catecismo de la Iglesia Cat\u00f3lica &middot; Directorio para la Catequesis (2020)',
-  menuToggleOpen: isEn ? 'Open menu' : 'Abrir men\u00fa',
-  menuToggleClose: isEn ? 'Close menu' : 'Cerrar men\u00fa',
-  ttsPlay: isEn ? 'Listen' : 'Escuchar',
-  ttsPause: isEn ? 'Pause' : 'Pausar',
-  ttsResume: isEn ? 'Continue' : 'Continuar',
-  ttsSkipBack: isEn ? 'Rewind 10 seconds' : 'Retroceder 10 segundos',
-  ttsSkipForward: isEn ? 'Forward 10 seconds' : 'Adelantar 10 segundos',
-  ttsSettings: isEn ? 'Voice settings' : 'Configuracion de voz',
-  ttsSettingsTitle: isEn ? 'Voice Settings' : 'Configuraci\u00f3n de voz',
-  ttsHFLabel: isEn ? 'Enhanced voice (Hugging Face)' : 'Voz mejorada (Hugging Face)',
-  ttsTokenLabel: isEn ? 'API Token:' : 'Token de API:',
-  ttsTokenHint: isEn ? 'Get your token at' : 'Obt\u00e9n tu token en',
-  ttsSave: isEn ? 'Save' : 'Guardar',
-  ttsClose: isEn ? 'Close' : 'Cerrar',
-  ttsHFTokenMissing: isEn ? 'Please configure your Hugging Face token in the settings' : 'Configura tu token de Hugging Face en el bot\u00f3n de configuraci\u00f3n',
+  siteTitle: isEn ? "Catechism Project" : "Proyecto Catecismo",
+  menuHome: isEn ? "Home" : "Inicio",
+  menuCreed: isEn ? "Creed" : "Credo",
+  menuSacraments: isEn ? "Sacraments" : "Sacramentos",
+  menuMoral: isEn ? "Moral" : "Moral",
+  menuPrayer: isEn ? "Prayer" : "Oracion",
+  footerLine1: isEn ? "Free &middot; Public &middot; Catholic &middot;" : "Gratuito &middot; P" + String.fromCharCode(250) + "blico &middot; Cat" + String.fromCharCode(243) + "lico &middot;",
+  footerLine2: isEn ? "Based on the Catechism of the Catholic Church &middot; Directory for Catechesis (2020)" : "Basado en el Catecismo de la Iglesia Cat" + String.fromCharCode(243) + "lica &middot; Directorio para la Catequesis (2020)",
+  menuToggleOpen: isEn ? "Open menu" : "Abrir men" + String.fromCharCode(250),
+  menuToggleClose: isEn ? "Close menu" : "Cerrar men" + String.fromCharCode(250),
+  ttsPlay: isEn ? "Listen" : "Escuchar",
+  ttsPause: isEn ? "Pause" : "Pausar",
+  ttsResume: isEn ? "Continue" : "Continuar",
+  ttsSkipBack: isEn ? "Rewind 10 seconds" : "Retroceder 10 segundos",
+  ttsSkipForward: isEn ? "Forward 10 seconds" : "Adelantar 10 segundos",
 };
 const homePrefix = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
 const linkPrefix = isEn ? '/catecismo-digital/en' : '/catecismo-digital/es';
@@ -112,15 +103,14 @@ const backHref = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
             <text x="12" y="14" text-anchor="middle" font-size="6" font-weight="bold">10</text>
           </svg>
         </button>
-        <button class="tts-btn tts-btn--settings" data-tts-settings aria-label={t.ttsSettings} title={t.ttsSettings}>
-          <svg class="tts-btn__icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
-            <path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-          </svg>
-        </button>
       </div>
     </header>
 
     <slot />
+
+    <div class="tts-progress">
+      <div class="tts-progress__bar" id="tts-progress-bar"></div>
+    </div>
   </main>
 
   <footer class="footer">
@@ -130,147 +120,107 @@ const backHref = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
     </div>
   </footer>
 
-  <!-- TTS Settings Modal -->
-  <div id="tts-modal" class="tts-modal" style="display:none">
-    <div class="tts-modal__content">
-      <h3 class="tts-modal__title" set:html={t.ttsSettingsTitle}></h3>
-      <label class="tts-modal__option">
-        <input type="checkbox" id="tts-hf-toggle" />
-        <span set:html={t.ttsHFLabel}></span>
-      </label>
-      <div id="tts-hf-config" class="tts-modal__config" style="display:none">
-        <label for="tts-hf-token" set:html={t.ttsTokenLabel}></label>
-        <input type="password" id="tts-hf-token" placeholder="hf_xxxxx..." class="tts-modal__input" />
-        <small class="tts-modal__hint" set:html={t.ttsTokenHint + ' <a href="https://huggingface.co/settings/tokens" target="_blank">huggingface.co/settings/tokens</a>'}></small>
-      </div>
-      <div class="tts-modal__actions">
-        <button id="tts-modal-save" class="tts-modal__btn tts-modal__btn--primary" set:html={t.ttsSave}></button>
-        <button id="tts-modal-close" class="tts-modal__btn" set:html={t.ttsClose}></button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TTS Audio element for Hugging Face -->
   <audio id="tts-audio" style="display:none"></audio>
 
-  <!-- TTS: Enhanced player with skip + HF support -->
   <script is:inline>
 (function() {
   const isEn = {isEn};
   const t = {
-    play: isEn ? 'Listen' : 'Escuchar',
-    pause: isEn ? 'Pause' : 'Pausar',
-    resume: isEn ? 'Continue' : 'Continuar',
-    stopped: isEn ? 'Listen' : 'Escuchar',
-    hfTokenMissing: isEn ? "Please configure your Hugging Face token in the settings" : "Configura tu token de Hugging Face en el bot\xF3n de configuraci\xF3n",
+    play: isEn ? "Listen" : "Escuchar",
+    pause: isEn ? "Pause" : "Pausar",
+    resume: isEn ? "Continue" : "Continuar",
+    stopped: isEn ? "Listen" : "Escuchar",
   };
 
   // Elements
   const playBtn = document.querySelector('[data-play]');
   const skipBackBtn = document.querySelector('[data-skip-back]');
   const skipForwardBtn = document.querySelector('[data-skip-forward]');
-  const settingsBtn = document.querySelector('[data-tts-settings]');
-  const modal = document.getElementById('tts-modal');
-  const hfToggle = document.getElementById('tts-hf-toggle');
-  const hfConfig = document.getElementById('tts-hf-config');
-  const hfTokenInput = document.getElementById('tts-hf-token');
-  const modalSave = document.getElementById('tts-modal-save');
-  const modalClose = document.getElementById('tts-modal-close');
   const audioEl = document.getElementById('tts-audio');
+  const progressBar = document.getElementById('tts-progress-bar');
 
   if (!playBtn) return;
 
   // State
   let speaking = false;
   let paused = false;
-  let utterance = null;
-  let currentCharIndex = 0;
-  let fullText = '';
-  let useHuggingFace = false;
-  let hfToken = '';
-  let audioBlobUrl = null;
+  let currentSegment = 0;
+  let segments = [];
+  let totalSegments = 0;
 
-  // Load settings from localStorage
-  function loadSettings() {
-    try {
-      useHuggingFace = localStorage.getItem('tts-use-hf') === 'true';
-      hfToken = localStorage.getItem('tts-hf-token') || '';
-      if (hfToggle) hfToggle.checked = useHuggingFace;
-      if (hfTokenInput) hfTokenInput.value = hfToken;
-      if (hfConfig) hfConfig.style.display = useHuggingFace ? 'block' : 'none';
-    } catch(e) {}
-  }
-  loadSettings();
-
-  // Modal handlers
-  if (settingsBtn) {
-    settingsBtn.addEventListener('click', () => {
-      if (modal) modal.style.display = 'flex';
-    });
-  }
-
-  if (hfToggle) {
-    hfToggle.addEventListener('change', () => {
-      if (hfConfig) hfConfig.style.display = hfToggle.checked ? 'block' : 'none';
-    });
-  }
-
-  if (modalSave) {
-    modalSave.addEventListener('click', () => {
-      useHuggingFace = hfToggle ? hfToggle.checked : false;
-      hfToken = hfTokenInput ? hfTokenInput.value : '';
-      try {
-        localStorage.setItem('tts-use-hf', useHuggingFace);
-        localStorage.setItem('tts-hf-token', hfToken);
-      } catch(e) {}
-      if (modal) modal.style.display = 'none';
-    });
-  }
-
-  if (modalClose) {
-    modalClose.addEventListener('click', () => {
-      if (modal) modal.style.display = 'none';
-    });
-  }
-
-  if (modal) {
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.style.display = 'none';
-    });
-  }
-
-  // Get text content
-  function getText() {
+  // Get text segments (split by paragraphs and headings)
+  function getSegments() {
     const main = document.querySelector('.main');
-    if (!main) return '';
+    if (!main) return [];
+    
     const clone = main.cloneNode(true);
-    clone.querySelectorAll('.tts-btn, .tts-controls, .downloads, .lesson-header__ref, script, style, .tts-modal').forEach(el => el.remove());
-    const text = clone.textContent || '';
-    return text.replace(/\s+/g, ' ').trim();
+    clone.querySelectorAll('.tts-btn, .tts-controls, .tts-progress, .lesson-header__ref, .lesson-header__title, .downloads, script, style').forEach(function(el) { el.remove(); });
+    
+    var segs = [];
+    var elements = clone.querySelectorAll('h2, h3, p, .depth-box');
+    elements.forEach(function(el) {
+      var text = (el.textContent || '').trim();
+      if (text.length > 10) {
+        // Split long paragraphs
+        if (text.length > 1000) {
+          var sentences = text.match(/[^.!?]+[.!?]+/g);
+          if (sentences) {
+            var chunk = '';
+            sentences.forEach(function(s) {
+              if ((chunk + s).length > 600) {
+                if (chunk.trim()) segs.push(chunk.trim());
+                chunk = s;
+              } else {
+                chunk += s;
+              }
+            });
+            if (chunk.trim()) segs.push(chunk.trim());
+          } else {
+            segs.push(text);
+          }
+        } else {
+          segs.push(text);
+        }
+      }
+    });
+    return segs;
   }
 
-  // Find best voice
-  function getBestVoice() {
-    if (!('speechSynthesis' in window)) return null;
-    const voices = window.speechSynthesis.getVoices();
+  // Play a segment via Edge TTS (via Cloudflare tunnel)
+  function playSegment(index) {
+    if (index >= segments.length) {
+      stopAll();
+      return;
+    }
     
-    let googleVoice = voices.find(v => v.name.includes('Google') && v.lang.startsWith('es'));
-    if (googleVoice) return googleVoice;
+    currentSegment = index;
+    var text = segments[index];
     
-    let msVoice = voices.find(v => v.name.includes('Microsoft') && v.lang.startsWith('es'));
-    if (msVoice) return msVoice;
-    
-    let anySpanish = voices.find(v => v.lang.startsWith('es'));
-    if (anySpanish) return anySpanish;
-    
-    return null;
+    fetch('https://tts.artesanosqueseros.com/tts?text=' + encodeURIComponent(text))
+      .then(function(r) {
+        if (!r.ok) throw new Error('TTS server error');
+        return r.blob();
+      })
+      .then(function(blob) {
+        if (audioEl.src) URL.revokeObjectURL(audioEl.src);
+        var url = URL.createObjectURL(blob);
+        audioEl.src = url;
+        audioEl.play();
+        speaking = true;
+        paused = false;
+        updateUI('playing');
+      })
+      .catch(function(err) {
+        console.error('TTS error:', err);
+        stopAll();
+      });
   }
 
   // Update UI
   function updateUI(state) {
-    const playIcon = playBtn.querySelector('.tts-btn__icon--play');
-    const pauseIcon = playBtn.querySelector('.tts-btn__icon--pause');
-    const label = playBtn.querySelector('.tts-btn__label');
+    var playIcon = playBtn.querySelector('.tts-btn__icon--play');
+    var pauseIcon = playBtn.querySelector('.tts-btn__icon--pause');
+    var label = playBtn.querySelector('.tts-btn__label');
     
     if (state === 'playing') {
       playBtn.classList.add('tts-btn--playing');
@@ -287,209 +237,97 @@ const backHref = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
       if (playIcon) playIcon.style.display = 'block';
       if (pauseIcon) pauseIcon.style.display = 'none';
       if (label) label.textContent = t.stopped;
+      if (progressBar) progressBar.style.width = '0%';
     }
+  }
+
+  // Update progress
+  function updateProgress() {
+    if (!progressBar || totalSegments === 0) return;
+    var pct = Math.min(100, Math.round((currentSegment / totalSegments) * 100));
+    progressBar.style.width = pct + '%';
   }
 
   // Stop all playback
   function stopAll() {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-    }
     if (audioEl) {
       audioEl.pause();
       audioEl.src = '';
     }
-    if (audioBlobUrl) {
-      URL.revokeObjectURL(audioBlobUrl);
-      audioBlobUrl = null;
-    }
     speaking = false;
     paused = false;
-    currentCharIndex = 0;
+    currentSegment = 0;
     updateUI('stopped');
-  }
-
-  // Web Speech API playback
-  function playWebSpeech(startIndex = 0) {
-    if (!('speechSynthesis' in window)) {
-      alert('Your browser does not support speech synthesis');
-      return;
-    }
-
-    const text = startIndex > 0 ? fullText.substring(startIndex) : getText();
-    if (!text) return;
-
-    if (startIndex === 0) fullText = text;
-
-    utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'es-MX';
-    utterance.rate = 0.9;
-    utterance.pitch = 1.0;
-
-    const bestVoice = getBestVoice();
-    if (bestVoice) utterance.voice = bestVoice;
-
-    utterance.onstart = () => {
-      speaking = true;
-      paused = false;
-      updateUI('playing');
-    };
-
-    utterance.onboundary = (event) => {
-      if (event.name === 'word' || event.name === 'sentence') {
-        currentCharIndex = startIndex + event.charIndex;
-      }
-    };
-
-    utterance.onend = () => {
-      speaking = false;
-      paused = false;
-      currentCharIndex = 0;
-      updateUI('stopped');
-    };
-
-    utterance.onerror = () => {
-      speaking = false;
-      paused = false;
-      updateUI('stopped');
-    };
-
-    window.speechSynthesis.speak(utterance);
-  }
-
-  // Hugging Face TTS playback
-  async function playHuggingFace(startIndex = 0) {
-    const text = startIndex > 0 ? fullText.substring(startIndex) : getText();
-    if (!text) return;
-
-    if (startIndex === 0) fullText = text;
-
-    if (!hfToken) {
-      alert(t.hfTokenMissing);
-      return;
-    }
-
-    try {
-      updateUI('playing');
-      
-      const response = await fetch('https://api-inference.huggingface.co/models/facebook/mms-tts-spa', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${hfToken}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ inputs: text.substring(0, 5000) })
-      });
-
-      if (!response.ok) {
-        throw new Error('Error en la API de Hugging Face');
-      }
-
-      const blob = await response.blob();
-      audioBlobUrl = URL.createObjectURL(blob);
-      audioEl.src = audioBlobUrl;
-      audioEl.play();
-      speaking = true;
-      paused = false;
-      
-    } catch (err) {
-      console.error('Hugging Face TTS error:', err);
-      alert('Error generating audio. Check your API token.');
-      updateUI('stopped');
-    }
   }
 
   // Audio element events
   if (audioEl) {
-    audioEl.onended = () => {
-      speaking = false;
-      paused = false;
-      currentCharIndex = 0;
-      updateUI('stopped');
+    audioEl.onended = function() {
+      // Play next segment
+      if (currentSegment < segments.length - 1) {
+        playSegment(currentSegment + 1);
+        updateProgress();
+      } else {
+        speaking = false;
+        paused = false;
+        currentSegment = 0;
+        updateUI('stopped');
+      }
     };
     
-    audioEl.onplay = () => {
+    audioEl.onerror = function() {
+      // Try next segment on error
+      if (currentSegment < segments.length - 1) {
+        playSegment(currentSegment + 1);
+      } else {
+        stopAll();
+      }
+    };
+    
+    audioEl.onplay = function() {
       speaking = true;
       paused = false;
       updateUI('playing');
     };
     
-    audioEl.onpause = () => {
+    audioEl.onpause = function() {
       paused = true;
       updateUI('paused');
     };
   }
 
   // Play/Pause button
-  playBtn.addEventListener('click', () => {
+  playBtn.addEventListener('click', function() {
+    if (segments.length === 0) {
+      segments = getSegments();
+      totalSegments = segments.length;
+    }
+    
+    if (totalSegments === 0) return;
+
     if (speaking && !paused) {
-      if (useHuggingFace && audioEl) {
-        audioEl.pause();
-      } else if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
-        speaking = false;
-      }
-      paused = true;
-      updateUI('paused');
+      audioEl.pause();
     } else if (paused) {
-      if (useHuggingFace && audioEl) {
-        audioEl.play();
-      } else {
-        playWebSpeech(currentCharIndex);
-      }
+      audioEl.play();
     } else {
-      if (useHuggingFace) {
-        playHuggingFace();
-      } else {
-        playWebSpeech();
-      }
+      playSegment(0);
     }
   });
 
   // Skip back 10s
   if (skipBackBtn) {
-    skipBackBtn.addEventListener('click', () => {
-      if (!speaking && !paused) return;
-      
-      if (useHuggingFace && audioEl) {
-        audioEl.currentTime = Math.max(0, audioEl.currentTime - 10);
-      } else {
-        const estimatedCharsPerSecond = 15;
-        const currentPos = currentCharIndex;
-        const backChars = estimatedCharsPerSecond * 10;
-        const newPos = Math.max(0, currentPos - backChars);
-        stopAll();
-        playWebSpeech(newPos);
-      }
+    skipBackBtn.addEventListener('click', function() {
+      if (!audioEl.src) return;
+      audioEl.currentTime = Math.max(0, (audioEl.currentTime || 0) - 10);
     });
   }
 
   // Skip forward 10s
   if (skipForwardBtn) {
-    skipForwardBtn.addEventListener('click', () => {
-      if (!speaking && !paused) return;
-      
-      if (useHuggingFace && audioEl) {
-        audioEl.currentTime = Math.min(audioEl.duration || 0, audioEl.currentTime + 10);
-      } else {
-        const estimatedCharsPerSecond = 15;
-        const currentPos = currentCharIndex;
-        const forwardChars = estimatedCharsPerSecond * 10;
-        const newPos = currentPos + forwardChars;
-        if (newPos < fullText.length) {
-          stopAll();
-          playWebSpeech(newPos);
-        } else {
-          stopAll();
-        }
-      }
+    skipForwardBtn.addEventListener('click', function() {
+      if (!audioEl.src) return;
+      audioEl.currentTime = Math.min(audioEl.duration || Infinity, (audioEl.currentTime || 0) + 10);
     });
-  }
-
-  // Load voices when available
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.onvoiceschanged = () => {};
-    window.speechSynthesis.getVoices();
   }
 })();
   </script>

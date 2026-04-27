@@ -240,3 +240,64 @@ body{
   .categories{grid-template-columns:1fr 1fr}
   .category-card{padding:14px}
 }
+
+/* Booklet printing (for workbook & guide) */
+@media print {
+  @page {
+    size: A5 portrait;
+    margin: 12mm 8mm 12mm 12mm;
+    marks: crop cross;
+    bleed: 3mm;
+  }
+  @page :first {
+    margin-top: 20mm;
+  }
+  @page :left {
+    margin-left: 12mm;
+    margin-right: 8mm;
+  }
+  @page :right {
+    margin-left: 8mm;
+    margin-right: 12mm;
+  }
+  * {
+    background: white !important;
+    color: #000 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+  .header, .footer, .tts-controls, .tts-modal, .header__toggle {
+    display: none !important;
+  }
+  .main {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+  .lesson-header {
+    page-break-before: avoid;
+    page-break-after: avoid;
+  }
+  .lesson-header__title {
+    font-size: 1.2rem;
+  }
+  section.content h2 {
+    page-break-before: always;
+    margin-top: 0;
+    padding-top: 0;
+  }
+  section.content h3 {
+    page-break-after: avoid;
+  }
+  .bible-passage, .question-block, .depth-box, blockquote, .takeaway {
+    page-break-inside: avoid;
+    border: 0.5pt solid #ddd;
+  }
+  .downloads { display: none !important; }
+  p, li { orphans: 3; widows: 3; }
+  a[href]::after { content: none !important; }
+  .content table { page-break-inside: avoid; font-size: 0.75rem; }
+  p[style*="border-bottom"] { border-bottom: 0.5pt solid #aaa !important; margin-bottom: 6pt !important; }
+  .big-question { font-size: 0.9rem; padding: 8pt 12pt; }
+  .question-block { border: 0.5pt solid #ddd; }
+}

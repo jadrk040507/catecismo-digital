@@ -11,7 +11,7 @@ const { title, cic, scripture } = Astro.props;
 <html lang={Astro.currentLocale || 'es'}>
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>{title} &mdash; Catecismo Digital</title>
   <meta name="description" content="Catequesis catolica gratuita" />
   <link rel="icon" type="image/svg+xml" href="/catecismo-digital/favicon.svg" />
@@ -45,6 +45,12 @@ const { title, cic, scripture } = Astro.props;
         <span>{scripture}</span>
       </div>
       <h1 class="lesson-header__title">{title}</h1>
+      <button class="tts-btn" data-play aria-label="Escuchar esta clase">
+        <svg class="tts-btn__icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+        <span class="tts-btn__label">Escuchar</span>
+      </button>
     </header>
 
     <slot />
@@ -52,9 +58,72 @@ const { title, cic, scripture } = Astro.props;
 
   <footer class="footer">
     <div class="footer__inner">
-      <p class="footer__text">Gratuito · Publico · Catolico · <a href="https://github.com/jadrk040507/catecismo-digital" class="footer__link">GitHub</a></p>
+      <p class="footer__text">Gratuito &middot; Publico &middot; Catolico &middot; <a href="https://github.com/jadrk040507/catecismo-digital" class="footer__link">GitHub</a></p>
       <p class="footer__text footer__text--small">Basado en el Catecismo de la Iglesia Catolica &middot; Directorio para la Catequesis (2020)</p>
     </div>
   </footer>
+
+  <!-- TTS: Web Speech API player -->
+  <script is:inline>
+(function() {
+  const btn = document.querySelector('[data-play]');
+  if (!btn || !('speechSynthesis' in window)) return;
+
+  let speaking = false;
+  let utterance = null;
+
+  function getText() {
+    const main = document.querySelector('.main');
+    if (!main) return '';
+    // Clone to avoid modifying live DOM
+    const clone = main.cloneNode(true);
+    // Remove buttons, download links, hidden elements
+    clone.querySelectorAll('.tts-btn, .downloads, .lesson-header__ref, script, style').forEach(el => el.remove());
+    // Get clean text
+    const text = clone.textContent || '';
+    return text.replace(/\s+/g, ' ').trim();
+  }
+
+  btn.addEventListener('click', function() {
+    if (speaking) {
+      window.speechSynthesis.cancel();
+      speaking = false;
+      btn.classList.remove('tts-btn--playing');
+      btn.querySelector('.tts-btn__label').textContent = 'Escuchar';
+      btn.querySelector('.tts-btn__icon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+      return;
+    }
+
+    const text = getText();
+    if (!text) return;
+
+    utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'es-MX';
+    utterance.rate = 0.85;
+    utterance.pitch = 1.0;
+
+    // Try to find a good Spanish voice
+    const voices = window.speechSynthesis.getVoices();
+    const spanishVoice = voices.find(v => v.lang.startsWith('es'));
+    if (spanishVoice) utterance.voice = spanishVoice;
+
+    utterance.onstart = function() {
+      speaking = true;
+      btn.classList.add('tts-btn--playing');
+      btn.querySelector('.tts-btn__label').textContent = 'Detener';
+      btn.querySelector('.tts-btn__icon').innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+    };
+
+    utterance.onend = utterance.onerror = function() {
+      speaking = false;
+      btn.classList.remove('tts-btn--playing');
+      btn.querySelector('.tts-btn__label').textContent = 'Escuchar';
+      btn.querySelector('.tts-btn__icon').innerHTML = '<path d="M8 5v14l11-7z"/>';
+    };
+
+    window.speechSynthesis.speak(utterance);
+  });
+})();
+</script>
 </body>
 </html>

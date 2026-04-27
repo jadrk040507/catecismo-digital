@@ -15,13 +15,43 @@ const toggleHref = isEn
   ? '/catecismo-digital/es/' + (foundSection || 'credo') + '/'
   : '/catecismo-digital/en/' + (foundSection || 'credo') + '/';
 const toggleLabel = isEn ? 'ES' : 'EN';
+
+// Translation strings
+const t = {
+  siteTitle: isEn ? 'Catechism Project' : 'Proyecto Catecismo',
+  menuHome: isEn ? 'Home' : 'Inicio',
+  menuCreed: isEn ? 'Creed' : 'Credo',
+  menuSacraments: isEn ? 'Sacraments' : 'Sacramentos',
+  menuMoral: isEn ? 'Moral' : 'Moral',
+  menuPrayer: isEn ? 'Prayer' : 'Oracion',
+  footerLine1: isEn ? 'Free &middot; Public &middot; Catholic &middot;' : 'Gratuito &middot; P\u00fablico &middot; Cat\u00f3lico &middot;',
+  footerLine2: isEn ? 'Based on the Catechism of the Catholic Church &middot; Directory for Catechesis (2020)' : 'Basado en el Catecismo de la Iglesia Cat\u00f3lica &middot; Directorio para la Catequesis (2020)',
+  menuToggleOpen: isEn ? 'Open menu' : 'Abrir men\u00fa',
+  menuToggleClose: isEn ? 'Close menu' : 'Cerrar men\u00fa',
+  ttsPlay: isEn ? 'Listen' : 'Escuchar',
+  ttsPause: isEn ? 'Pause' : 'Pausar',
+  ttsResume: isEn ? 'Continue' : 'Continuar',
+  ttsSkipBack: isEn ? 'Rewind 10 seconds' : 'Retroceder 10 segundos',
+  ttsSkipForward: isEn ? 'Forward 10 seconds' : 'Adelantar 10 segundos',
+  ttsSettings: isEn ? 'Voice settings' : 'Configuracion de voz',
+  ttsSettingsTitle: isEn ? 'Voice Settings' : 'Configuraci\u00f3n de voz',
+  ttsHFLabel: isEn ? 'Enhanced voice (Hugging Face)' : 'Voz mejorada (Hugging Face)',
+  ttsTokenLabel: isEn ? 'API Token:' : 'Token de API:',
+  ttsTokenHint: isEn ? 'Get your token at' : 'Obt\u00e9n tu token en',
+  ttsSave: isEn ? 'Save' : 'Guardar',
+  ttsClose: isEn ? 'Close' : 'Cerrar',
+  ttsHFTokenMissing: isEn ? 'Please configure your Hugging Face token in the settings' : 'Configura tu token de Hugging Face en el bot\u00f3n de configuraci\u00f3n',
+};
+const homePrefix = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
+const linkPrefix = isEn ? '/catecismo-digital/en' : '/catecismo-digital/es';
+const backHref = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
 ---
 <!DOCTYPE html>
-<html lang={Astro.currentLocale || 'es'}>
+<html lang={Astro.currentLocale || (isEn ? 'en' : 'es')}>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>{title} &mdash; Proyecto Catecismo</title>
+  <title set:html={title + ' &mdash; ' + t.siteTitle}></title>
   <meta name="description" content="Catequesis catolica gratuita" />
   <link rel="icon" type="image/svg+xml" href="/catecismo-digital/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,21 +62,21 @@ const toggleLabel = isEn ? 'ES' : 'EN';
 <body>
   <header class="header">
     <nav class="header__nav">
-      <a href="/catecismo-digital/" class="header__logo">
+      <a href={backHref} class="header__logo">
         <span class="header__logo-icon">+</span>
-        <span>Proyecto Catecismo</span>
+        <span set:html={t.siteTitle}></span>
       </a>
-      <button class="header__toggle" data-toggle-menu aria-label="Abrir menú" type="button">
+      <button class="header__toggle" data-toggle-menu aria-label={t.menuToggleOpen} type="button">
         <span></span>
         <span></span>
         <span></span>
       </button>
       <div class="header__links">
-        <a href="/catecismo-digital/" class="header__link">Inicio</a>
-        <a href="/catecismo-digital/es/credo/" class="header__link">Credo</a>
-        <a href="/catecismo-digital/es/sacramentos/" class="header__link">Sacramentos</a>
-        <a href="/catecismo-digital/es/moral/" class="header__link">Moral</a>
-        <a href="/catecismo-digital/es/oracion/" class="header__link">Oración</a>
+        <a href={homePrefix} class="header__link" set:html={t.menuHome}></a>
+        <a href={linkPrefix + '/credo/'} class="header__link" set:html={t.menuCreed}></a>
+        <a href={linkPrefix + '/sacramentos/'} class="header__link" set:html={t.menuSacraments}></a>
+        <a href={linkPrefix + '/moral/'} class="header__link" set:html={t.menuMoral}></a>
+        <a href={linkPrefix + '/oracion/'} class="header__link" set:html={t.menuPrayer}></a>
         <a href={toggleHref} class="header__link header__link--lang">{toggleLabel}</a>
       </div>
     </nav>
@@ -60,13 +90,13 @@ const toggleLabel = isEn ? 'ES' : 'EN';
       </div>
       <h1 class="lesson-header__title">{title}</h1>
       <div class="tts-controls">
-        <button class="tts-btn tts-btn--skip" data-skip-back aria-label="Retroceder 10 segundos" title="Atrás 10s">
+        <button class="tts-btn tts-btn--skip" data-skip-back aria-label={t.ttsSkipBack} title={t.ttsSkipBack}>
           <svg class="tts-btn__icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
             <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
             <text x="12" y="14" text-anchor="middle" font-size="6" font-weight="bold">10</text>
           </svg>
         </button>
-        <button class="tts-btn tts-btn--play" data-play aria-label="Escuchar esta clase">
+        <button class="tts-btn tts-btn--play" data-play aria-label={t.ttsPlay}>
           <svg class="tts-btn__icon tts-btn__icon--play" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
             <path d="M8 5v14l11-7z"/>
           </svg>
@@ -74,15 +104,15 @@ const toggleLabel = isEn ? 'ES' : 'EN';
             <rect x="6" y="4" width="4" height="16"/>
             <rect x="14" y="4" width="4" height="16"/>
           </svg>
-          <span class="tts-btn__label">Escuchar</span>
+          <span class="tts-btn__label" set:html={t.ttsPlay}></span>
         </button>
-        <button class="tts-btn tts-btn--skip" data-skip-forward aria-label="Adelantar 10 segundos" title="Adelante 10s">
+        <button class="tts-btn tts-btn--skip" data-skip-forward aria-label={t.ttsSkipForward} title={t.ttsSkipForward}>
           <svg class="tts-btn__icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
             <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/>
             <text x="12" y="14" text-anchor="middle" font-size="6" font-weight="bold">10</text>
           </svg>
         </button>
-        <button class="tts-btn tts-btn--settings" data-tts-settings aria-label="Configuración de voz" title="Configuración">
+        <button class="tts-btn tts-btn--settings" data-tts-settings aria-label={t.ttsSettings} title={t.ttsSettings}>
           <svg class="tts-btn__icon" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
             <path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
           </svg>
@@ -95,27 +125,27 @@ const toggleLabel = isEn ? 'ES' : 'EN';
 
   <footer class="footer">
     <div class="footer__inner">
-      <p class="footer__text">Gratuito &middot; Publico &middot; Catolico &middot; <a href="https://github.com/jadrk040507/catecismo-digital" class="footer__link">GitHub</a></p>
-      <p class="footer__text footer__text--small">Basado en el Catecismo de la Iglesia Catolica &middot; Directorio para la Catequesis (2020)</p>
+      <p class="footer__text" set:html={t.footerLine1 + ' <a href="https://github.com/jadrk040507/catecismo-digital" class="footer__link">GitHub</a>'}></p>
+      <p class="footer__text footer__text--small" set:html={t.footerLine2}></p>
     </div>
   </footer>
 
   <!-- TTS Settings Modal -->
   <div id="tts-modal" class="tts-modal" style="display:none">
     <div class="tts-modal__content">
-      <h3 class="tts-modal__title">Configuración de voz</h3>
+      <h3 class="tts-modal__title" set:html={t.ttsSettingsTitle}></h3>
       <label class="tts-modal__option">
         <input type="checkbox" id="tts-hf-toggle" />
-        <span>Voz mejorada (Hugging Face)</span>
+        <span set:html={t.ttsHFLabel}></span>
       </label>
       <div id="tts-hf-config" class="tts-modal__config" style="display:none">
-        <label for="tts-hf-token">Token de API:</label>
+        <label for="tts-hf-token" set:html={t.ttsTokenLabel}></label>
         <input type="password" id="tts-hf-token" placeholder="hf_xxxxx..." class="tts-modal__input" />
-        <small class="tts-modal__hint">Obtén tu token en <a href="https://huggingface.co/settings/tokens" target="_blank">huggingface.co/settings/tokens</a></small>
+        <small class="tts-modal__hint" set:html={t.ttsTokenHint + ' <a href="https://huggingface.co/settings/tokens" target="_blank">huggingface.co/settings/tokens</a>'}></small>
       </div>
       <div class="tts-modal__actions">
-        <button id="tts-modal-save" class="tts-modal__btn tts-modal__btn--primary">Guardar</button>
-        <button id="tts-modal-close" class="tts-modal__btn">Cerrar</button>
+        <button id="tts-modal-save" class="tts-modal__btn tts-modal__btn--primary" set:html={t.ttsSave}></button>
+        <button id="tts-modal-close" class="tts-modal__btn" set:html={t.ttsClose}></button>
       </div>
     </div>
   </div>
@@ -126,6 +156,15 @@ const toggleLabel = isEn ? 'ES' : 'EN';
   <!-- TTS: Enhanced player with skip + HF support -->
   <script is:inline>
 (function() {
+  const isEn = {isEn};
+  const t = {
+    play: isEn ? 'Listen' : 'Escuchar',
+    pause: isEn ? 'Pause' : 'Pausar',
+    resume: isEn ? 'Continue' : 'Continuar',
+    stopped: isEn ? 'Listen' : 'Escuchar',
+    hfTokenMissing: isEn ? "Please configure your Hugging Face token in the settings" : "Configura tu token de Hugging Face en el bot\xF3n de configuraci\xF3n",
+  };
+
   // Elements
   const playBtn = document.querySelector('[data-play]');
   const skipBackBtn = document.querySelector('[data-skip-back]');
@@ -210,12 +249,11 @@ const toggleLabel = isEn ? 'ES' : 'EN';
     return text.replace(/\s+/g, ' ').trim();
   }
 
-  // Find best Spanish voice
+  // Find best voice
   function getBestVoice() {
     if (!('speechSynthesis' in window)) return null;
     const voices = window.speechSynthesis.getVoices();
     
-    // Priority: Google Spanish > Microsoft Spanish > Any Spanish
     let googleVoice = voices.find(v => v.name.includes('Google') && v.lang.startsWith('es'));
     if (googleVoice) return googleVoice;
     
@@ -238,17 +276,17 @@ const toggleLabel = isEn ? 'ES' : 'EN';
       playBtn.classList.add('tts-btn--playing');
       if (playIcon) playIcon.style.display = 'none';
       if (pauseIcon) pauseIcon.style.display = 'block';
-      if (label) label.textContent = 'Pausar';
+      if (label) label.textContent = t.pause;
     } else if (state === 'paused') {
       playBtn.classList.add('tts-btn--playing');
       if (playIcon) playIcon.style.display = 'block';
       if (pauseIcon) pauseIcon.style.display = 'none';
-      if (label) label.textContent = 'Continuar';
+      if (label) label.textContent = t.resume;
     } else {
       playBtn.classList.remove('tts-btn--playing');
       if (playIcon) playIcon.style.display = 'block';
       if (pauseIcon) pauseIcon.style.display = 'none';
-      if (label) label.textContent = 'Escuchar';
+      if (label) label.textContent = t.stopped;
     }
   }
 
@@ -274,7 +312,7 @@ const toggleLabel = isEn ? 'ES' : 'EN';
   // Web Speech API playback
   function playWebSpeech(startIndex = 0) {
     if (!('speechSynthesis' in window)) {
-      alert('Tu navegador no soporta síntesis de voz');
+      alert('Your browser does not support speech synthesis');
       return;
     }
 
@@ -327,7 +365,7 @@ const toggleLabel = isEn ? 'ES' : 'EN';
     if (startIndex === 0) fullText = text;
 
     if (!hfToken) {
-      alert('Configura tu token de Hugging Face en el botón de configuración ⚙️');
+      alert(t.hfTokenMissing);
       return;
     }
 
@@ -340,7 +378,7 @@ const toggleLabel = isEn ? 'ES' : 'EN';
           'Authorization': `Bearer ${hfToken}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ inputs: text.substring(0, 5000) }) // Limit text length
+        body: JSON.stringify({ inputs: text.substring(0, 5000) })
       });
 
       if (!response.ok) {
@@ -356,7 +394,7 @@ const toggleLabel = isEn ? 'ES' : 'EN';
       
     } catch (err) {
       console.error('Hugging Face TTS error:', err);
-      alert('Error al generar audio. Verifica tu token de API.');
+      alert('Error generating audio. Check your API token.');
       updateUI('stopped');
     }
   }
@@ -385,7 +423,6 @@ const toggleLabel = isEn ? 'ES' : 'EN';
   // Play/Pause button
   playBtn.addEventListener('click', () => {
     if (speaking && !paused) {
-      // Pause
       if (useHuggingFace && audioEl) {
         audioEl.pause();
       } else if ('speechSynthesis' in window) {
@@ -395,14 +432,12 @@ const toggleLabel = isEn ? 'ES' : 'EN';
       paused = true;
       updateUI('paused');
     } else if (paused) {
-      // Resume
       if (useHuggingFace && audioEl) {
         audioEl.play();
       } else {
         playWebSpeech(currentCharIndex);
       }
     } else {
-      // Start fresh
       if (useHuggingFace) {
         playHuggingFace();
       } else {
@@ -419,8 +454,7 @@ const toggleLabel = isEn ? 'ES' : 'EN';
       if (useHuggingFace && audioEl) {
         audioEl.currentTime = Math.max(0, audioEl.currentTime - 10);
       } else {
-        // Estimate position based on charIndex (rough approximation)
-        const estimatedCharsPerSecond = 15; // ~15 chars per second at 0.9 rate
+        const estimatedCharsPerSecond = 15;
         const currentPos = currentCharIndex;
         const backChars = estimatedCharsPerSecond * 10;
         const newPos = Math.max(0, currentPos - backChars);
@@ -455,21 +489,20 @@ const toggleLabel = isEn ? 'ES' : 'EN';
   // Load voices when available
   if ('speechSynthesis' in window) {
     window.speechSynthesis.onvoiceschanged = () => {};
-    // Trigger voice loading
     window.speechSynthesis.getVoices();
   }
 })();
-
-  // Hamburger toggle
-  document.querySelector('[data-toggle-menu]')?.addEventListener('click', function() {
-    var nav = this.closest('.header__nav');
-    var links = nav?.querySelector('.header__links');
-    if (links) {
-      this.classList.toggle('header__toggle--open');
-      links.classList.toggle('header__links--open');
-      this.setAttribute('aria-label', this.classList.contains('header__toggle--open') ? 'Cerrar menú' : 'Abrir menú');
-    }
-  });
-</script>
+  </script>
+  <script is:inline>
+    document.querySelector('[data-toggle-menu]')?.addEventListener('click', function() {
+      var nav = this.closest('.header__nav');
+      var links = nav?.querySelector('.header__links');
+      var isOpen = this.classList.contains('header__toggle--open');
+      if (links) {
+        this.classList.toggle('header__toggle--open');
+        links.classList.toggle('header__links--open');
+      }
+    });
+  </script>
 </body>
 </html>

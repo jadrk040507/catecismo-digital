@@ -1,11 +1,15 @@
 ---
+export interface Props {
+  title?: string;
+}
+const { title } = Astro.props;
 ---
 <!DOCTYPE html>
 <html lang={Astro.currentLocale || 'es'}>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{Astro.props.title || 'Catecismo Digital'}</title>
+  <title>{title ? title + ' — Proyecto Catecismo' : 'Proyecto Catecismo'}</title>
   <meta name="description" content="Catequesis católica gratuita, clara y profunda para todas las edades" />
   <link rel="icon" type="image/svg+xml" href="/catecismo-digital/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -18,7 +22,7 @@
     <nav class="header__nav">
       <a href="/catecismo-digital/" class="header__logo">
         <span class="header__logo-icon">+</span>
-        <span>Catecismo Digital</span>
+        <span>Proyecto Catecismo</span>
       </a>
       <div class="header__links">
         <a href="/catecismo-digital/" class="header__link">Inicio</a>
@@ -37,8 +41,8 @@
 
   <footer class="footer">
     <div class="footer__inner">
-      <p class="footer__text">Gratuito · Publico · Catolico · <a href="https://github.com/jadrk040507/catecismo-digital" class="footer__link">GitHub</a></p>
-      <p class="footer__text footer__text--small">Basado en el Catecismo de la Iglesia Catolica · Directorio para la Catequesis (2020)</p>
+      <p class="footer__text">Gratuito &middot; Publico &middot; Catolico &middot; <a href="https://github.com/jadrk040507/catecismo-digital" class="footer__link">GitHub</a></p>
+      <p class="footer__text footer__text--small">Basado en el Catecismo de la Iglesia Catolica &middot; Directorio para la Catequesis (2020)</p>
     </div>
   </footer>
 </body>

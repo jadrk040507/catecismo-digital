@@ -1,115 +1,95 @@
-# CATECISMO-SKILL.md — Catecismo Digital Platform
+# CATECISMO-SKILL.md — Proyecto Catecismo
 
 ## Identity
-- **Agente:** Catecismo Digital Agent (`session:catecismo-agent`)
-- **Proyecto:** Plataforma abierta, pública y gratuita de catequesis católica
-- **Stack:** Astro + Tailwind + Markdown + Pagefind + PDF generation
-- **Repo:** GitHub (público)
-- **URL futura:** Por definir
+- **Agente:** Catecismo Agent (`session:catecismo-agent`)
+- **Proyecto:** Proyecto Catecismo — plataforma abierta, pública y gratuita de catequesis católica
+- **Stack:** Astro + vanilla CSS (no Tailwind) + GitHub Pages + Web Speech API TTS
+- **Repo:** `github.com/jadrk040507/catecismo-digital` (público)
+- **URL:** https://jadrk040507.github.io/catecismo-digital/
+- **Base:** `/catecismo-digital` (subpath, not custom domain)
 
-## Content Structure (per class)
+## Rename (April 26)
+- Renamed from "Catecismo Digital" to **"Proyecto Catecismo"** — reflects that it's a living project, not a static digital version
+- Header logo, page titles, hero section all updated
 
-### File: `credo/03-dios-padre.md`
+## Pedagogical Structure (per class)
 
-```markdown
----
-title: "Dios es Padre"
-cic: "CIC 198-231"
-scripture: "Mt 6:9, 1 Jn 4:8"
-order: 3
----
+Each class follows the 6-section format from the Directory for Catechesis 2020:
 
-## 🎯 Gran Pregunta
+| Section | Label | Description |
+|---------|-------|-------------|
+| 1 | Gran Pregunta | Big question that opens the topic (starts with a story or image) |
+| 2 | Contenido | Main content broken into subsections with CIC references |
+| 3 | Conexión Bíblica | Biblical passage integrated into the main text body (not separate) |
+| 4 | Para Reflexionar | 3-5 questions for personal reflection |
+| 5 | Idea Fuerza | One-line takeaway in callout box |
+| 6 | Riqueza Cultural | Optional: film, art, music, literature, podcasts |
 
-Si Dios es Padre, ¿por qué hay tanto dolor en el mundo?
+### Key rules:
+- **HTML-only** in `.astro` pages — no Markdown inside HTML elements
+- **Depth-boxes inline** instead of level-tabs: 4 colored boxes placed within text flow
+  - `depth-box--semilla` (green) → "Actividad" — exercises for children
+  - `depth-box--brotes` (blue) → "Conexión" — reflection for youth
+  - `depth-box--raiz` (orange) → "Contexto" — background for new adults
+  - `depth-box--arbol` (purple) → "Ampliación" — theological depth
+- **No labels that categorize people** — boxes are opt-in, not tags
+- **~1 hour content depth** per class
+- **Minimal emoji** — functional icons only
+- **TTS button** (Web Speech API) below lesson title — reads entire class aloud
 
-## 📝 Contenido
+## Per-Class Files
 
-[4-6 paragraphs, with CIC references embedded, subtitles]
+For each class N, create in `src/pages/es/credo/`:
 
-## 📜 Conexión Bíblica
+| File | Content |
+|------|---------|
+| `NN-tema.astro` | Main lesson page (full HTML content) |
+| `NN-tema-workbook.astro` | Student workbook (printable via `window.print()`) |
+| `NN-tema-guide.astro` | Catechist guide (for class preparation) |
 
-> "Cuando oréis, decid: Padre nuestro..." (Lc 11:2)
+### Workbook structure (per class):
+- Recordando lo esencial (5 comprehension questions)
+- Para reflexionar y escribir (5 personal journal questions with lines for writing)
+- Actividades prácticas (2-3 activities: drawing, rewriting psalms, dialogues)
+- Versiculo para memorizar (verse callout box)
+- Oración para esta semana (prayer written by the class theme)
 
-[Conexión de 2-3 líneas]
+### Guide structure (per class):
+- Resumen de la clase (duration, central theme, objectives, key verse, CIC refs)
+- Estructura sugerida de la clase (table with sections, durations, what catechist does)
+- Notas para el catequista (background on key figures/themes)
+- Adaptación por edades (Semilla/Brotes/Raíz/Árbol)
+- Recursos complementarios (YouCat, Opus Dei, videos, books)
+- Preguntas difíciles (FAQ with suggested responses)
+- Oración del catequista
 
-## 💭 Para Reflexionar
+## Key Sources (trusted)
 
-- ¿Qué imagen de Dios tengo? ¿Juez, policía, o Padre?
-- [2-3 preguntas más]
+- vatican.va (Catechism, CCC, documents)
+- YouCat (Youth Catechism) — youcat.org
+- Opus Dei — opusdei.org (Temas de fe cristiana)
+- Vatican News — vaticannews.va
+- Fulton J. Sheen — "Peace of Soul", "Way to Happiness" (for stories)
+- C. S. Lewis — "Mere Christianity"
+- Catholic Answers, EWTN (for supplementary clarity)
+- USCCB (for English CCC references)
+- CELAM (for Latin American context)
+- Hakuna Group Music — behakuna.com (contemporary Catholic music)
+- Infinito + 1 / Juan Manuel Cotelo — Catequizis series
+- Real + True (OSV) — osvnews.com/real-true
+- Padre Luis Toro — YouTube catechesis
+- Fichas de catequesis imprimibles — fichasconestilo.com, mifecatolica.net, parroquialainmaculadavalladolid.blogspot.com
 
-## ✨ Idea Fuerza
+## 4 Levels (pedagogical adaptation in guide)
 
-"Conocer a Dios como Padre no es saber algo de Él, sino saber que Él existe para ti."
+| Level | Age | Approach | Guide notes |
+|-------|-----|----------|-------------|
+| 🌱 Semilla | 7-12 | Narrative-symbolic | Use water metaphor, drawing activities |
+| 🌿 Brotes | 13-17 | Existential-defiant | Connect with their experience of highs and lows |
+| 🪴 Raíz | Adults new | Kerygmatic-fundational | Welcome skepticism, use convert testimonies |
+| 🌳 Árbol | Formed adults | Theological-spiritual | Deepen with *desiderium naturale*, Fathers |
 
-## 🖼️ Riqueza Cultural (opcional)
-
-🎥 [La parábola del hijo pródigo — video recomendado](url)
-```
-
-### Multilevel: Front-end renderiza según el nivel
-El Markdown tiene bloques marcados:
-```markdown
-:::semilla
-[Versión para niños]
-:::
-
-:::brotes
-[Versión para jóvenes]
-:::
-
-:::raiz
-[Versión para adultos nuevos]
-:::
-
-:::arbol
-[Versión para formados]
-:::
-```
-
-## Downloadables
-
-Generated at build time from same Markdown:
-- `/print/workbook-03.pdf` → Student workbook
-- `/print/guide-03.pdf` → Catechist guide
-
-## Search
-- Pagefind indexes all Markdown → full-text search client-side
-- Filters: category (credo/sacramentos/moral/oracion), level, keywords
-
-## Pipeline
-
-```
-CIC (source) → Agent EXTRACT → Agent COMPOSE → Agent WORKBOOK → Agent GUIDE → AGENT VALIDATE
-```
-
-Each module processed one at a time (1M token context = limited). No batch processing.
-
-## Technology Choices
-
-| Component | Choice | Why |
-|-----------|--------|-----|
-| SSG | Astro | Multi-idioma nativo, builds estático, rápido |
-| CSS | Tailwind 4 | Minimalista, utility-first |
-| Content | Markdown + MDX | Versionable, readable, transformable |
-| Search | Pagefind | Client-side, no backend, ultra-rápido |
-| i18n | Astro i18n | Archivos .es.md / .en.md side-by-side |
-| PDF | Puppeteer/Playwright build step | Genera PDFs desde HTML renderizado |
-| Hosting | GitHub Pages | Gratuito, CDN global |
-| CI/CD | GitHub Actions | Build + deploy automático |
-
-## 4 Niveles Pedagógicos
-
-| Nivel | Edad | Enfoque | Estilo |
-|-------|------|---------|--------|
-| 🌱 Semilla | 7-12 | Narrativo-simbólico | Metáforas, dibujos, historias |
-| 🌿 Brotes | 13-17 | Existencial-desafiante | Preguntas, retos, influencers santos |
-| 🪴 Raíz | Adultos nuevos | Kerigmático-fundacional | FAQs, sin jerga, acogedor |
-| 🌳 Árbol | Formados | Teológico-espiritual | SC, Padres, Doctores, profundidad |
-
-## CIC Module Map (initial)
-
-Start with PART 1: THE CREED
+## CIC Module Map (Part 1: The Creed)
 
 | # | Tema | CIC |
 |---|------|-----|
@@ -124,21 +104,32 @@ Start with PART 1: THE CREED
 | 9 | El Hombre y el Pecado | 355-421 |
 | 10 | La Iglesia, Pueblo de Dios | 751-870 |
 
-## Validation Criteria
+## Pipeline
 
-Every class MUST pass:
+CIC (source) → RESEARCH → EXTRACT → COMPOSE → WORKBOOK → GUIDE → VALIDATE → BUILD → DEPLOY
+
+Each module processed one at a time.
+
+## Tech
+
+| Component | Choice |
+|-----------|--------|
+| SSG | Astro v6 |
+| CSS | Vanilla (no Tailwind) |
+| Content | HTML in `.astro` pages |
+| Search | Pending (Pagefind later) |
+| i18n | Astro i18n (`es` default, `en` available) |
+| TTS | Web Speech API (browser-native, no cost) |
+| Print | `window.print()` + CSS `@media print` |
+| Hosting | GitHub Pages |
+| CI/CD | GitHub Actions (push to main) |
+
+## Validation (every class)
+
 - ✅ Doctrinal orthodoxy (no error, no ambiguity)
-- ✅ Kerygmatic: does this lead to encounter with Christ?
+- ✅ Kerygmatic: leads to encounter with Christ
 - ✅ Pedagogically sound per level
-- ✅ References to CIC + Scripture embedded
+- ✅ CIC + Scripture references embedded
 - ✅ Language: clear, warm, inviting, not academic
-
-## Sources (trusted)
-
-- vatican.va (Catechism, documents)
-- Biblia (Nácar-Colunga or official translation)
-- Vatican News (daily)
-- Magisterium AI (for reference, NOT primary)
-- EWTN, Catholic Answers (for supplementary clarity)
-- USCCB (for English CCC references)
-- CELAM (for Latin American context)
+- ✅ Includes story/anecdote in opening (Fulton Sheen or other)
+- ✅ Workbook and Guide exist

@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Workbook — God is Father | Catechism Project">
+<style>
+  .workbook{max-width:720px;margin:0 auto;padding:32px 24px;font-family:var(--serif),Georgia,serif}
+  .workbook h1{font-size:1.6rem;margin-bottom:24px;color:var(--text)}
+  .workbook__section{margin-bottom:32px}
+  .workbook__section h2{font-size:1.2rem;color:var(--accent);margin-bottom:16px;border-bottom:2px solid var(--gold-light);padding-bottom:6px}
+  .workbook__section ol,.workbook__section ul{padding-left:24px}
+  .workbook__section li{margin-bottom:12px;line-height:1.6}
+  .workbook__line{margin:4px 0 16px 0;border:none;border-top:1px dashed var(--border);height:32px}
+  .workbook__blank{display:block;width:100%;height:40px;border-bottom:1px dashed var(--border);margin:8px 0 20px}
+  .workbook__blank--tall{height:80px}
+  .workbook__blank--x2{height:160px}
+  .print-btn{display:block;margin:40px auto 0;padding:12px 32px;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-size:.95rem;cursor:pointer}
+  .print-btn:hover{background:var(--accent-dark)}
+</style>
+  <div class="workbook">
+    <h1>God is Father &mdash; Workbook</h1>
+
+    <section class="workbook__section">
+      <h2>Remembering the Essentials</h2>
+      <ol>
+        <li>What name did God reveal to Moses at the burning bush? What does that name mean?<div class="workbook__blank"></div></li>
+        <li>The word &laquo;Abba&raquo; that Jesus used &mdash; what does it mean and what was new about it?<div class="workbook__blank"></div></li>
+        <li>Where in the Bible does it say &laquo;God is love&raquo;?<div class="workbook__blank"></div></li>
+        <li>Who is the true protagonist of the parable of the Prodigal Son?<div class="workbook__blank"></div></li>
+        <li>According to Saint Paul, what spirit did we receive: a spirit of slavery or a spirit of adoption?<div class="workbook__blank"></div></li>
+      </ol>
+    </section>
+
+    <section class="workbook__section">
+      <h2>For Reflection and Writing</h2>
+      <ol>
+        <li>Describe a moment when you experienced God's love as that of a father (or mother). How did you feel?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+        <li>What sometimes prevents you from relating to God with the trust of a child?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+        <li>If you knew with certainty that God loves you unconditionally, what would you change in your life?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+        <li>The parable of the Prodigal Son has two sons. Which one do you identify with more today? Why?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+        <li>How can you live this week with greater filial trust toward God?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+      </ol>
+    </section>
+
+    <section class="workbook__section">
+      <h2>Practical Activities</h2>
+      <ol>
+        <li><strong>Read Luke 15:11-32 aloud.</strong> After the younger son (the one who left), read it again putting yourself in the shoes of the older son. What feelings arise? Write a brief reflection.<div class="workbook__blank workbook__blank--tall"></div></li>
+        <li><strong>Pray the Our Father slowly.</strong> Take each phrase and pause after each one. Write what each phrase tells you about who God is for you.<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+        <li><strong>Write a letter to God as Father.</strong> Begin with &laquo;Dear Father God...&raquo; and write what is on your heart: your joys, your fears, your questions, your gratitude.<div class="workbook__blank workbook__blank--x2"></div></li>
+      </ol>
+    </section>
+
+    <div class="callout">
+      <p><strong>Memory Verse:</strong> &laquo;You did not receive a spirit of slavery to fall back into fear, but you received a spirit of adoption, through which we cry, 'Abba, Father!'&raquo; (Rom 8:15).</p>
+    </div>
+
+    <section class="workbook__section">
+      <h2>Prayer for This Week</h2>
+      <p>
+        Our Father, who art in heaven,<br>
+        hallowed be thy name.<br>
+        Thank you for being a Father who runs toward me,<br>
+        who embraces me before I speak,<br>
+        who does not ask for explanations,<br>
+        who celebrates when I return.<br>
+        Help me to trust in your love,<br>
+        to live as a child, not a slave,<br>
+        and to forgive as you forgive.<br>
+        Amen.
+      </p>
+    </section>
+
+    <button onclick="window.print()" class="print-btn">Print / PDF</button>
+  </div>
+</BaseLayout>

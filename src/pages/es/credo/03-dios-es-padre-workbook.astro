@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Workbook — Dios es Padre | Proyecto Catecismo">
+<style>
+  .workbook{max-width:720px;margin:0 auto;padding:32px 24px;font-family:var(--serif),Georgia,serif}
+  .workbook h1{font-size:1.6rem;margin-bottom:24px;color:var(--text)}
+  .workbook__section{margin-bottom:32px}
+  .workbook__section h2{font-size:1.2rem;color:var(--accent);margin-bottom:16px;border-bottom:2px solid var(--gold-light);padding-bottom:6px}
+  .workbook__section ol,.workbook__section ul{padding-left:24px}
+  .workbook__section li{margin-bottom:12px;line-height:1.6}
+  .workbook__line{margin:4px 0 16px 0;border:none;border-top:1px dashed var(--border);height:32px}
+  .workbook__blank{display:block;width:100%;height:40px;border-bottom:1px dashed var(--border);margin:8px 0 20px}
+  .workbook__blank--tall{height:80px}
+  .workbook__blank--x2{height:160px}
+  .print-btn{display:block;margin:40px auto 0;padding:12px 32px;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-size:.95rem;cursor:pointer}
+  .print-btn:hover{background:var(--accent-dark)}
+</style>
+  <div class="workbook">
+    <h1>Dios es Padre &mdash; Workbook</h1>
+
+    <section class="workbook__section">
+      <h2>Recordando lo esencial</h2>
+      <ol>
+        <li>&iquest;Qué nombre reveló Dios a Moisés en la zarza ardiente? &iquest;Qué significa ese nombre?<div class="workbook__blank"></div></li>
+        <li>La palabra &laquo;Abba&raquo; que usó Jesús, &iquest;qué significa y qu&eacute; novedad tiene?<div class="workbook__blank"></div></li>
+        <li>&iquest;D&oacute;nde dice la Biblia &laquo;Dios es Amor&raquo;?<div class="workbook__blank"></div></li>
+        <li>&iquest;Qui&eacute;n es el verdadero protagonista de la par&aacute;bola del Hijo Pr&oacute;digo?<div class="workbook__blank"></div></li>
+        <li>Seg&uacute;n San Pablo, &iquest;qu&eacute; esp&iacute;ritu recibimos: de esclavitud o de adopci&oacute;n filial?<div class="workbook__blank"></div></li>
+      </ol>
+    </section>
+
+    <section class="workbook__section">
+      <h2>Para reflexionar y escribir</h2>
+      <ol>
+        <li>Describe un momento en el que hayas experimentado el amor de Dios como el de un padre (o una madre). &iquest;C&oacute;mo te sentiste?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+        <li>&iquest;Qu&eacute; te impide a veces tratar a Dios con la confianza de un hijo?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+        <li>Si supieras con certeza que Dios te ama sin condiciones, &iquest;qu&eacute; cambiar&iacute;as en tu vida?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+        <li>La par&aacute;bola del Hijo Pr&oacute;digo tiene dos hijos. &iquest;Con cu&aacute;l de los dos te identificas m&aacute;s hoy? &iquest;Por qu&eacute;?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+        <li>&iquest;C&oacute;mo puedes vivir esta semana con m&aacute;s confianza filial hacia Dios?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+      </ol>
+    </section>
+
+    <section class="workbook__section">
+      <h2>Actividades pr&aacute;cticas</h2>
+      <ol>
+        <li><strong>Leer Lucas 15,11-32 en voz alta.</strong> Despu&eacute;s del primer hijo (el que se fue), vuelve a leerlo poni&eacute;ndote en los zapatos del hijo mayor. &iquest;Qu&eacute; sentimientos te surgen? Escribe una breve reflexi&oacute;n.<div class="workbook__blank workbook__blank--tall"></div></li>
+        <li><strong>Rezar el Padre Nuestro despacio.</strong> Toma cada frase y haz una pausa despu&eacute;s de cada una. Puedes escribir lo que cada frase te dice de qui&eacute;n es Dios para ti.<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
+        <li><strong>Escribir una carta a Dios como Padre.</strong> Empieza con &laquo;Querido Pap&aacute; Dios...&raquo; y escribe lo que llevas dentro: tus alegr&iacute;as, tus miedos, tus preguntas, tu agradecimiento.<div class="workbook__blank workbook__blank--x2"></div></li>
+      </ol>
+    </section>
+
+    <div class="callout">
+      <p><strong>Vers&iacute;culo para memorizar:</strong> &laquo;No recibieron un esp&iacute;ritu de esclavitud para recaer en el temor, sino que recibieron el Esp&iacute;ritu de adopci&oacute;n filial, por el que clamamos: &iexcl;Abba, Padre!&raquo; (Rm 8,15).</p>
+    </div>
+
+    <section class="workbook__section">
+      <h2>Oraci&oacute;n para esta semana</h2>
+      <p>
+        Padre nuestro, que est&aacute;s en el cielo,<br>
+        santificado sea tu nombre.<br>
+        Gracias porque eres un Padre que corre hacia m&iacute;,<br>
+        que me abraza antes de que hable,<br>
+        que no me pide explicaciones,<br>
+        que me hace fiesta cuando vuelvo.<br>
+        Ay&uacute;dame a confiar en tu amor,<br>
+        a vivir como hijo, no como esclavo,<br>
+        y a perdonar como t&uacute; perdonas.<br>
+        Am&eacute;n.
+      </p>
+    </section>
+
+    <button onclick="window.print()" class="print-btn">Imprimir / PDF</button>
+  </div>
+</BaseLayout>

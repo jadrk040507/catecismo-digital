@@ -8,8 +8,12 @@ export interface Props {
 const { title, cic, scripture } = Astro.props;
 const path = Astro.url.pathname;
 const isEn = path.startsWith('/catecismo-digital/en');
-// Toggle goes to section index in the other language
-const toggleHref = isEn ? '/catecismo-digital/es/' : '/catecismo-digital/en/';
+// Extract section from path and swap language
+const sections = ['credo', 'sacramentos', 'moral', 'oracion'];
+const foundSection = sections.find(s => path.includes('/' + s + '/'));
+const toggleHref = isEn
+  ? '/catecismo-digital/es/' + (foundSection || 'credo') + '/'
+  : '/catecismo-digital/en/' + (foundSection || 'credo') + '/';
 const toggleLabel = isEn ? 'ES' : 'EN';
 ---
 <!DOCTYPE html>

@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="The Creed — Catechism Project">
+  <header class="lesson-header">
+    <h1 class="lesson-header__title">The Creed</h1>
+    <p style="color: var(--text-soft); font-size: 1.05rem; margin-top: 8px;">
+      «I believe» — the gateway to the life of faith. What the Church believes and professes.
+    </p>
+  </header>
+
+  <div style="margin-top: 32px; display: flex; flex-direction: column; gap: 8px;">
+    <a href="/catecismo-digital/en/credo/01-desire-for-god/" style="display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); text-decoration: none; color: var(--text); transition: all 0.2s;"
+       onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+      <span style="font-size: 1.2rem;">01</span>
+      <div>
+        <div style="font-weight: 600;">The Desire for God</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">CCC 27-30 &middot; Why do we seek?</div>
+      </div>
+    </a>
+
+    <div style="display:flex;gap:6px;margin:0 0 16px 0;flex-wrap:wrap">
+      <a href="/catecismo-digital/en/credo/01-desire-for-god-workbook" style="padding:4px 10px;font-size:.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);text-decoration:none;color:var(--text-soft);background:var(--bg-card)">Workbook</a>
+      <a href="/catecismo-digital/en/credo/01-desire-for-god-guide" style="padding:4px 10px;font-size:.75rem;border:1px solid var(--border);border-radius:var(--radius-sm);text-decoration:none;color:var(--text-soft);background:var(--bg-card)">Catechist's Guide</a>
+    </div>
+    
+    <div style="display: flex; align-items: center; gap: 12px; padding: 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); opacity: 0.5;">
+      <span style="font-size: 1.2rem;">02</span>
+      <div>
+        <div style="font-weight: 600; color: var(--text-muted);">Coming soon</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);">God's Revelation &middot; CCC 50-73</div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

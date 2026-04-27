@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Home">
+  <section class="hero">
+    <div class="hero__icon">✝</div>
+    <h1 class="hero__title">Catechism Project</h1>
+    <p class="hero__sub">
+      A living, accessible, and free catechism. Based on the Catechism of the Catholic Church,
+      structured in lessons to always learn and relearn.
+    </p>
+    <a href="/catecismo-digital/en/credo/" class="hero__cta">Begin →</a>
+  </section>
+
+  <div class="categories">
+    <a href="/catecismo-digital/en/credo/" class="category-card">
+      <div class="category-card__icon">📖</div>
+      <div class="category-card__title">The Creed</div>
+      <div class="category-card__count">What we believe</div>
+    </a>
+    <a href="/catecismo-digital/en/sacraments/" class="category-card">
+      <div class="category-card__icon">🕊</div>
+      <div class="category-card__title">Sacraments</div>
+      <div class="category-card__count">The life of grace</div>
+    </a>
+    <a href="/catecismo-digital/en/moral/" class="category-card">
+      <div class="category-card__icon">🔥</div>
+      <div class="category-card__title">Moral</div>
+      <div class="category-card__count">Living in Christ</div>
+    </a>
+    <a href="/catecismo-digital/en/prayer/" class="category-card">
+      <div class="category-card__icon">🙏</div>
+      <div class="category-card__title">Prayer</div>
+      <div class="category-card__count">The life of prayer</div>
+    </a>
+  </div>
+</BaseLayout>

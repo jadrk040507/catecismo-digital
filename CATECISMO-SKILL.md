@@ -125,7 +125,9 @@ For each class N, create in `src/pages/es/credo/`:
 | 🪴 Raíz | Adults new | Kerygmatic-fundational | Welcome skepticism, use convert testimonies |
 | 🌳 Árbol | Formed adults | Theological-spiritual | Deepen with *desiderium naturale*, Fathers |
 
-## CIC Module Map (Part 1: The Creed)
+## CIC Module Map — Syllabus Completo (Partes 1-4)
+
+### Parte 1: El Credo (CIC 26-1065) — 10 temas ✅ COMPLETO
 
 | # | Tema | CIC |
 |---|------|-----|
@@ -139,6 +141,48 @@ For each class N, create in `src/pages/es/credo/`:
 | 8 | Creación y Providencia | 279-324 |
 | 9 | El Hombre y el Pecado | 355-421 |
 | 10 | La Iglesia, Pueblo de Dios | 751-870 |
+
+### Parte 2: Liturgia y Sacramentos (CIC 1066-1690) — 10 temas ⬜
+
+| # | Tema | CIC |
+|---|------|-----|
+| 11 | La Liturgia: encuentro con Cristo | 1066-1134 |
+| 12 | El Misterio Pascual en los Sacramentos | 1135-1209 |
+| 13 | El Bautismo | 1210-1284 |
+| 14 | La Confirmación | 1285-1321 |
+| 15 | La Eucaristía | 1322-1419 |
+| 16 | La Penitencia y la Reconciliación | 1420-1498 |
+| 17 | La Unción de los Enfermos | 1499-1532 |
+| 18 | El Orden Sagrado | 1533-1600 |
+| 19 | El Matrimonio | 1601-1666 |
+| 20 | Sacramentales y Piedad Popular | 1667-1690 |
+
+### Parte 3: Moral / Vida en Cristo (CIC 1691-2557) — 12 temas ⬜
+
+| # | Tema | CIC |
+|---|------|-----|
+| 21 | La Dignidad de la Persona Humana | 1700-1729 |
+| 22 | Nuestra Vocación a la Bienaventuranza | 1716-1729 |
+| 23 | La Libertad del Hombre | 1730-1748 |
+| 24 | La Moralidad de los Actos Humanos | 1749-1761 |
+| 25 | Las Pasiones y la Conciencia Moral | 1762-1802 |
+| 26 | Las Virtudes | 1803-1845 |
+| 27 | El Pecado | 1846-1876 |
+| 28 | La Ley Moral | 1950-1986 |
+| 29 | La Gracia y la Justificación | 1987-2029 |
+| 30 | La Iglesia, Madre y Maestra | 2030-2051 |
+| 31 | Los Diez Mandamientos (I-III) | 2052-2132 |
+| 32 | Los Diez Mandamientos (IV-X) | 2133-2557 |
+
+### Parte 4: La Oración Cristiana (CIC 2558-2865) — 5 temas ⬜
+
+| # | Tema | CIC |
+|---|------|-----|
+| 33 | La Oración en la Vida Cristiana | 2558-2589 |
+| 34 | Las Fuentes de la Oración | 2590-2649 |
+| 35 | La Tradición Contemplativa | 2650-2719 |
+| 36 | El Padre Nuestro: Invocación | 2759-2800 |
+| 37 | Las Siete Peticiones | 2801-2865 |
 
 ## Pipeline
 

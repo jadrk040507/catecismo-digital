@@ -36,6 +36,39 @@ const t = {
 const homePrefix = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
 const linkPrefix = isEn ? '/catecismo-digital/en' : '/catecismo-digital/es';
 const backHref = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
+
+// Compute workbook/guide links and current topic slug
+const cleanPath = path.endsWith('/') ? path.slice(0, -1) : path;
+const pathParts = cleanPath.split('/');
+const lastSegment = pathParts[pathParts.length - 1] || '';
+const isWorkbookOrGuide = lastSegment.endsWith('-workbook') || lastSegment.endsWith('-guide');
+
+// Extract the topic slug (last segment), removing trailing number-dash if present
+const topicSlug = lastSegment.replace(/-(workbook|guide)$/, '');
+const parentPath = pathParts.slice(0, -1).join('/');
+
+let navLessonUrls = { workbook: '', guide: '' };
+let navLabels = { workbook: '', guide: '' };
+
+if (!isWorkbookOrGuide) {
+  // Topic page itself: link to -workbook and -guide in same directory
+  navLessonUrls.workbook = `${cleanPath}-workbook`;
+  navLessonUrls.guide = `${cleanPath}-guide`;
+  navLabels.workbook = isEn ? 'Workbook' : 'Cuaderno';
+  navLabels.guide = isEn ? "Catechist's Guide" : 'Guía del Catequista';
+} else {
+  // Workbook or guide page: link back to lesson and the other resource
+  navLessonUrls.lesson = `${parentPath}/${topicSlug}`;
+  navLabels.lesson = isEn ? 'Lesson' : 'Lección';
+  
+  if (lastSegment.endsWith('-workbook')) {
+    navLessonUrls.other = `${parentPath}/${topicSlug}-guide`;
+    navLabels.other = isEn ? "Catechist's Guide" : 'Guía del Catequista';
+  } else {
+    navLessonUrls.other = `${parentPath}/${topicSlug}-workbook`;
+    navLabels.other = isEn ? 'Workbook' : 'Cuaderno';
+  }
+}
 ---
 <!DOCTYPE html>
 <html lang={Astro.currentLocale || (isEn ? 'en' : 'es')}>
@@ -107,6 +140,36 @@ const backHref = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
     </header>
 
     <slot />
+
+    <!-- Bottom navigation: workbook / guide links -->
+    {
+      !isWorkbookOrGuide && (
+        <div class="lesson-bottom-nav">
+          <a href={navLessonUrls.workbook} class="lesson-bottom-nav__btn lesson-bottom-nav__btn--workbook">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/></svg>
+            <span>{navLabels.workbook}</span>
+          </a>
+          <a href={navLessonUrls.guide} class="lesson-bottom-nav__btn lesson-bottom-nav__btn--guide">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.1 0 .15-.05.25-.05C3.1 20.45 5.05 20 6.5 20c1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.15 4.75.35.15.05.3.05.45.05.25 0 .5-.15.5-.35V6c-.6-.45-1.25-.75-2-1zM18 19.5c-1.4 0-3.05.35-4.5 1.2V8.5c1.45-.85 3.1-1.2 4.5-1.2s3.05.35 4.5 1.2v12.2c-1.35-.6-2.9-1-4.5-1zm-9-13.2c1.45 0 3.05.35 4.5 1.2v12.2c-1.45-.85-3.05-1.2-4.5-1.2s-3.05.35-4.5 1.2V7.5c1.45-.85 3.05-1.2 4.5-1.2z"/></svg>
+            <span>{navLabels.guide}</span>
+          </a>
+        </div>
+      )
+    }
+    {
+      isWorkbookOrGuide && (
+        <div class="lesson-bottom-nav">
+          <a href={navLessonUrls.lesson} class="lesson-bottom-nav__btn lesson-bottom-nav__btn--back">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            <span>{navLabels.lesson}</span>
+          </a>
+          <a href={navLessonUrls.other} class="lesson-bottom-nav__btn lesson-bottom-nav__btn--other">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/></svg>
+            <span>{navLabels.other}</span>
+          </a>
+        </div>
+      )
+    }
 
     <div class="tts-progress">
       <div class="tts-progress__bar" id="tts-progress-bar"></div>
@@ -196,7 +259,7 @@ const backHref = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
     currentSegment = index;
     var text = segments[index];
     
-    fetch('https://tts.artesanosqueseros.com/tts?text=' + encodeURIComponent(text))
+    fetch('https://tts.artesanosqueseros.com/tts?text=' + encodeURIComponent(text) + '&lang=' + (isEn ? 'en' : 'es'))
       .then(function(r) {
         if (!r.ok) throw new Error('TTS server error');
         return r.blob();

@@ -118,6 +118,12 @@ body{
 .tts-modal__btn:hover{border-color:var(--accent)}
 .tts-modal__btn--primary{background:var(--accent);color:white;border-color:var(--accent)}
 .tts-modal__btn--primary:hover{background:var(--accent-dark)}
+/* Bottom navigation — workbook/guide links */
+.lesson-bottom-nav{display:flex;gap:12px;flex-wrap:wrap;margin:32px 0 24px;justify-content:center}
+.lesson-bottom-nav__btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:1px solid var(--border);border-radius:var(--radius-sm);text-decoration:none;color:var(--text);font-size:.85rem;font-weight:500;background:var(--bg-card);transition:all .2s}
+.lesson-bottom-nav__btn:hover{border-color:var(--accent);background:var(--gold-light);color:var(--accent-dark)}
+.lesson-bottom-nav__btn svg{flex-shrink:0}
+
 /* Content */
 .content{line-height:1.8}
 .content h2{

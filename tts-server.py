@@ -5,6 +5,7 @@ Provides: GET /tts?text=...  → returns MP3 audio stream."""
 
 import asyncio
 import urllib.parse
+import os
 from fastapi import FastAPI, Query, Response
 from fastapi.middleware.cors import CORSMiddleware
 import edge_tts
@@ -18,13 +19,20 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+VOICE_ES = os.environ.get("TTS_VOICE_ES", "es-MX-DaliaNeural")
+VOICE_EN = os.environ.get("TTS_VOICE_EN", "en-US-JennyNeural")
+RATE = os.environ.get("TTS_RATE", "-10%")
+
+
 @app.get("/tts")
-async def text_to_speech(text: str = Query(..., min_length=1, max_length=10000)):
+async def text_to_speech(
+    text: str = Query(..., min_length=1, max_length=10000),
+    lang: str = Query("es", regex="^(es|en)$"),
+):
     try:
         text_decoded = urllib.parse.unquote(text)
-        voice = "es-MX-DaliaNeural"
-        rate = "-10%"  # slightly slower for clarity
-        communicate = edge_tts.Communicate(text_decoded, voice=voice, rate=rate)
+        voice = VOICE_ES if lang == "es" else VOICE_EN
+        communicate = edge_tts.Communicate(text_decoded, voice=voice, rate=RATE)
         mp3_data = b""
         async for chunk in communicate.stream():
             if chunk["type"] == "audio":

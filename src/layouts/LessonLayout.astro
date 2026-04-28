@@ -71,7 +71,7 @@ if (!isWorkbookOrGuide) {
 }
 ---
 <!DOCTYPE html>
-<html lang={Astro.currentLocale || (isEn ? 'en' : 'es')}>
+<html lang={Astro.currentLocale || (isEn ? 'en' : 'es')} data-is-en={isEn ? 'true' : 'false'}>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -187,7 +187,7 @@ if (!isWorkbookOrGuide) {
 
   <script is:inline>
 (function() {
-  const isEn = {isEn};
+  const isEn = document.documentElement.getAttribute('data-is-en') === 'true';
   const t = {
     play: isEn ? "Listen" : "Escuchar",
     pause: isEn ? "Pause" : "Pausar",

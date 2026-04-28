@@ -63,6 +63,42 @@ For each class N, create in `src/pages/es/credo/`:
 - Preguntas difíciles (FAQ with suggested responses)
 - Oración del catequista
 
+## 💅 Visual Style Rules (CRITICAL — must be followed exactly)
+
+### Layout imports
+- **Lesson files** (lesson page, workbook, guide): import `LessonLayout` from `../../../layouts/LessonLayout.astro`
+- **NEVER use `BaseLayout`** for lessons, workbooks, or guides — `LessonLayout` provides the correct structure
+- **NO inline `<style>` blocks** in workbook or guide pages — CSS is inherited from LessonLayout and global.css
+
+### Section structure
+- **ALL `<section>` elements** in lesson content MUST have `class="content"` — even the first one
+- **Big Question section**: `<section class="content">` → `<h2>Gran Pregunta</h2>` → `<p class="big-question">...`
+- **No special section classes**: no `class="big-question"`, `class="reflection"`, `class="culture"` on `<section>` — just `class="content"`
+- **No HTML comments** (`<!-- ... -->`) in `.astro` files — the layout handles labeling
+
+### Content patterns
+- **Bible verses**: use `<blockquote><p>... <cite>Reference</cite></p></blockquote>`
+- **Reflection questions** (workbook): use `<div class="question-block"><p class="question-block__q">...</p><p class="question-block__p">...</p></div>`
+- **Memory verse** (workbook): use `<div class="bible-passage"><p>... </p><p class="bible-passage__ref">...</p></div>`
+- **Prayers**: use `<blockquote><p>...</p></blockquote>` (multi-line with `<br />`)
+- **Download/print button**: `<div class="downloads"><a href="javascript:window.print()" class="download-btn">...</a></div>`
+- **Depth-boxes**: always include `<h4 class="depth-box__title">` as heading
+
+### Language consistency
+- **EN lessons must follow the SAME visual structure** as ES lessons — identical sectioning, same class names, same layout patterns
+- Only difference: title, content text, and references use English (CCC vs CIC, verse format with colon vs comma)
+- Scripture references: ES uses `Ex 3,13-15`; EN uses `Ex 3:13-15`
+
+### Print & TTS
+- Print-to-PDF uses A4 @page, NOT A5 booklet
+- Print button uses `javascript:window.print()` with `class="download-btn"`
+- TTS button is provided by LessonLayout automatically — do not add manual TTS buttons
+
+### Frontmatter
+- Lesson files use: `const lessonRef = "..."; const lessonScripture = "...";` in frontmatter
+- Guide files use: `title="..." cic="..." scripture=""` in Layout props
+- Workbook files use: `title="Workbook &mdash; ..." cic="..." scripture=""` in Layout props
+
 ## Key Sources (trusted)
 
 - vatican.va (Catechism, CCC, documents)

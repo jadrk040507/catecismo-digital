@@ -1,75 +1,134 @@
 ---
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LessonLayout from '../../../layouts/LessonLayout.astro';
 ---
-<BaseLayout title="Workbook — God is Father | Catechism Project">
-<style>
-  .workbook{max-width:720px;margin:0 auto;padding:32px 24px;font-family:var(--serif),Georgia,serif}
-  .workbook h1{font-size:1.6rem;margin-bottom:24px;color:var(--text)}
-  .workbook__section{margin-bottom:32px}
-  .workbook__section h2{font-size:1.2rem;color:var(--accent);margin-bottom:16px;border-bottom:2px solid var(--gold-light);padding-bottom:6px}
-  .workbook__section ol,.workbook__section ul{padding-left:24px}
-  .workbook__section li{margin-bottom:12px;line-height:1.6}
-  .workbook__line{margin:4px 0 16px 0;border:none;border-top:1px dashed var(--border);height:32px}
-  .workbook__blank{display:block;width:100%;height:40px;border-bottom:1px dashed var(--border);margin:8px 0 20px}
-  .workbook__blank--tall{height:80px}
-  .workbook__blank--x2{height:160px}
-  .print-btn{display:block;margin:40px auto 0;padding:12px 32px;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);font-family:var(--sans);font-size:.95rem;cursor:pointer}
-  .print-btn:hover{background:var(--accent-dark)}
-</style>
-  <div class="workbook">
-    <h1>God is Father &mdash; Workbook</h1>
+<LessonLayout title="Workbook &mdash; God is Father" cic="CCC 198-231" scripture="">
 
-    <section class="workbook__section">
-      <h2>Remembering the Essentials</h2>
-      <ol>
-        <li>What name did God reveal to Moses at the burning bush? What does that name mean?<div class="workbook__blank"></div></li>
-        <li>The word &laquo;Abba&raquo; that Jesus used &mdash; what does it mean and what was new about it?<div class="workbook__blank"></div></li>
-        <li>Where in the Bible does it say &laquo;God is love&raquo;?<div class="workbook__blank"></div></li>
-        <li>Who is the true protagonist of the parable of the Prodigal Son?<div class="workbook__blank"></div></li>
-        <li>According to Saint Paul, what spirit did we receive: a spirit of slavery or a spirit of adoption?<div class="workbook__blank"></div></li>
-      </ol>
-    </section>
+<section class="content">
 
-    <section class="workbook__section">
-      <h2>For Reflection and Writing</h2>
-      <ol>
-        <li>Describe a moment when you experienced God's love as that of a father (or mother). How did you feel?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
-        <li>What sometimes prevents you from relating to God with the trust of a child?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
-        <li>If you knew with certainty that God loves you unconditionally, what would you change in your life?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
-        <li>The parable of the Prodigal Son has two sons. Which one do you identify with more today? Why?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
-        <li>How can you live this week with greater filial trust toward God?<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
-      </ol>
-    </section>
+<h2>Student Workbook</h2>
+<p class="big-question">For use after class or in a group. Print this page or work in your notebook.</p>
 
-    <section class="workbook__section">
-      <h2>Practical Activities</h2>
-      <ol>
-        <li><strong>Read Luke 15:11-32 aloud.</strong> After the younger son (the one who left), read it again putting yourself in the shoes of the older son. What feelings arise? Write a brief reflection.<div class="workbook__blank workbook__blank--tall"></div></li>
-        <li><strong>Pray the Our Father slowly.</strong> Take each phrase and pause after each one. Write what each phrase tells you about who God is for you.<div class="workbook__blank"></div><div class="workbook__blank"></div></li>
-        <li><strong>Write a letter to God as Father.</strong> Begin with &laquo;Dear Father God...&raquo; and write what is on your heart: your joys, your fears, your questions, your gratitude.<div class="workbook__blank workbook__blank--x2"></div></li>
-      </ol>
-    </section>
+<h3>Remembering the Essentials</h3>
 
-    <div class="callout">
-      <p><strong>Memory Verse:</strong> &laquo;You did not receive a spirit of slavery to fall back into fear, but you received a spirit of adoption, through which we cry, 'Abba, Father!'&raquo; (Rom 8:15).</p>
-    </div>
+<ol>
+<li>What name did God reveal to Moses at the burning bush? What does that name mean?</li>
+<li>The word &laquo;Abba&raquo; that Jesus used &mdash; what does it mean and what was new about it?</li>
+<li>Where in the Bible does it say &laquo;God is love&raquo;?</li>
+<li>Who is the true protagonist of the parable of the Prodigal Son?</li>
+<li>According to Saint Paul, what spirit did we receive: a spirit of slavery or a spirit of adoption?</li>
+</ol>
 
-    <section class="workbook__section">
-      <h2>Prayer for This Week</h2>
-      <p>
-        Our Father, who art in heaven,<br>
-        hallowed be thy name.<br>
-        Thank you for being a Father who runs toward me,<br>
-        who embraces me before I speak,<br>
-        who does not ask for explanations,<br>
-        who celebrates when I return.<br>
-        Help me to trust in your love,<br>
-        to live as a child, not a slave,<br>
-        and to forgive as you forgive.<br>
-        Amen.
-      </p>
-    </section>
+</section>
 
-    <button onclick="window.print()" class="print-btn">Print / PDF</button>
-  </div>
-</BaseLayout>
+<section class="content">
+
+<h3>For Reflection and Writing</h3>
+
+<p>Answer each question honestly. There are no &laquo;correct&raquo; answers to these personal questions.</p>
+
+<div class="question-block">
+<p class="question-block__q">1. Describe a moment when you experienced God's love as that of a father (or mother). How did you feel?</p>
+<p class="question-block__p">Take a moment to remember. If nothing comes to mind, think of an experience of unconditional love you received from someone.</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+</div>
+
+<div class="question-block">
+<p class="question-block__q">2. What sometimes prevents you from relating to God with the trust of a child?</p>
+<p class="question-block__p">Is it fear? Guilt? The feeling that God is far away or angry?</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+</div>
+
+<div class="question-block">
+<p class="question-block__q">3. If you knew with certainty that God loves you unconditionally, what would you change in your life?</p>
+<p class="question-block__p">What would you do differently? What would you fear less?</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+</div>
+
+<div class="question-block">
+<p class="question-block__q">4. The parable of the Prodigal Son has two sons. Which one do you identify with more today? Why?</p>
+<p class="question-block__p">Are you the one who left and needs to return? Or the one who stayed but is resentful? Perhaps a mix of both?</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+</div>
+
+<div class="question-block">
+<p class="question-block__q">5. How can you live this week with greater filial trust toward God?</p>
+<p class="question-block__p">Name one concrete action: a prayer, a decision, a conversation you need to have.</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+</div>
+
+</section>
+
+<section class="content" id="activities">
+
+<h3>Practical Activities</h3>
+
+<h4>A. Read Luke 15:11-32 aloud</h4>
+<p>After the younger son (the one who left), read it again putting yourself in the shoes of the older son. What feelings arise? Write a brief reflection.</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+
+<h4>B. Pray the Our Father slowly</h4>
+<p>Take each phrase and pause after each one. Write what each phrase tells you about who God is for you.</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+
+<h4>C. Write a letter to God as Father</h4>
+<p>Begin with &laquo;Dear Father God...&raquo; and write what is on your heart: your joys, your fears, your questions, your gratitude. Don't worry about making it sound beautiful; just be honest.</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+<p style="border-bottom:1px solid var(--border);margin-bottom:8px">&nbsp;</p>
+
+</section>
+
+<section class="content">
+
+<h3>Memory Verse</h3>
+
+<div class="bible-passage">
+<p>&laquo;You did not receive a spirit of slavery to fall back into fear, but you received a spirit of adoption, through which we cry, 'Abba, Father!'&raquo;</p>
+<p class="bible-passage__ref">&mdash; Romans 8:15</p>
+</div>
+
+</section>
+
+<section class="content">
+
+<h3>Prayer for This Week</h3>
+
+<blockquote>
+<p>Our Father, who art in heaven,<br />
+hallowed be thy name.<br />
+Thank you for being a Father who runs toward me,<br />
+who embraces me before I speak,<br />
+who does not ask for explanations,<br />
+who celebrates when I return.<br />
+Help me to trust in your love,<br />
+to live as a child, not a slave,<br />
+and to forgive as you forgive.<br />
+Amen.</p>
+</blockquote>
+
+</section>
+
+<section class="content">
+
+<hr />
+
+<div class="downloads">
+<a href="javascript:window.print()" class="download-btn">Print Workbook</a>
+</div>
+
+</section>
+
+</LessonLayout>

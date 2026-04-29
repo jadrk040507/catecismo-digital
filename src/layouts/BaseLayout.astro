@@ -1,13 +1,14 @@
 ---
 export interface Props {
   title?: string;
+  description?: string;
 }
-const { title } = Astro.props;
+const { title, description } = Astro.props;
 const path = Astro.url.pathname;
 const isEn = path.startsWith('/catecismo-digital/en');
 const isRoot = path === '/catecismo-digital/' || path === '/catecismo-digital';
 // Extract section (credo, sacramentos, moral, oracion) from path
-const sections = ['credo', 'sacramentos', 'moral', 'oracion'];
+const sections = ['credo', 'sacramentos', 'moral', 'oracion', 'chat-demo'];
 const foundSection = sections.find(s => path.includes('/' + s + '/'));
 const toggleHref = isRoot || (!isEn && !foundSection)
   ? '/catecismo-digital/en/'
@@ -23,12 +24,13 @@ const t = {
   menuCreed: isEn ? 'Creed' : 'Credo',
   menuSacraments: isEn ? 'Sacraments' : 'Sacramentos',
   menuMoral: isEn ? 'Moral' : 'Moral',
-  menuPrayer: isEn ? 'Prayer' : 'Oracion',
-  footerLine1: isEn ? 'Free &middot; Public &middot; Catholic &middot;' : 'Gratuito &middot; P\u00fablico &middot; Cat\u00f3lico &middot;',
-  footerLine2: isEn ? 'Based on the Catechism of the Catholic Church &middot; Directory for Catechesis (2020)' : 'Basado en el Catecismo de la Iglesia Cat\u00f3lica &middot; Directorio para la Catequesis (2020)',
-  menuToggleOpen: isEn ? 'Open menu' : 'Abrir men\u00fa',
-  menuToggleClose: isEn ? 'Close menu' : 'Cerrar men\u00fa',
-  siteDescription: isEn ? 'Free, clear, and deep Catholic catechesis for all ages' : 'Catequesis cat\u00f3lica gratuita, clara y profunda para todas las edades',
+  menuPrayer: isEn ? 'Prayer' : 'Oración',
+  menuChat: isEn ? 'AI Chat' : 'Catequista',
+  footerLine1: isEn ? 'Free &middot; Public &middot; Catholic &middot;' : 'Gratuito &middot; Público &middot; Católico &middot;',
+  footerLine2: isEn ? 'Based on the Catechism of the Catholic Church &middot; Directory for Catechesis (2020)' : 'Basado en el Catecismo de la Iglesia Católica &middot; Directorio para la Catequesis (2020)',
+  menuToggleOpen: isEn ? 'Open menu' : 'Abrir menú',
+  menuToggleClose: isEn ? 'Close menu' : 'Cerrar menú',
+  siteDescription: description || (isEn ? 'Free, clear, and deep Catholic catechesis for all ages' : 'Catequesis católica gratuita, clara y profunda para todas las edades'),
 };
 const homePrefix = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
 const linkPrefix = isEn ? '/catecismo-digital/en' : '/catecismo-digital/es';
@@ -38,7 +40,7 @@ const linkPrefix = isEn ? '/catecismo-digital/en' : '/catecismo-digital/es';
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{title ? title + ' &mdash; ' + t.siteTitle : t.siteTitle}</title>
+  <title>{title ? title + ' — ' + t.siteTitle : t.siteTitle}</title>
   <meta name="description" content={t.siteDescription} />
   <link rel="icon" type="image/svg+xml" href="/catecismo-digital/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -64,6 +66,7 @@ const linkPrefix = isEn ? '/catecismo-digital/en' : '/catecismo-digital/es';
         <a href={linkPrefix + '/sacramentos/'} class="header__link" set:html={t.menuSacraments}></a>
         <a href={linkPrefix + '/moral/'} class="header__link" set:html={t.menuMoral}></a>
         <a href={linkPrefix + '/oracion/'} class="header__link" set:html={t.menuPrayer}></a>
+        <a href={linkPrefix + '/chat-demo/'} class="header__link" set:html={t.menuChat}></a>
         <a href={toggleHref} class="header__link header__link--lang">{toggleLabel}</a>
       </div>
     </nav>
@@ -88,7 +91,7 @@ const linkPrefix = isEn ? '/catecismo-digital/en' : '/catecismo-digital/es';
       if (links) {
         this.classList.toggle('header__toggle--open');
         links.classList.toggle('header__links--open');
-        this.setAttribute('aria-label', isOpen ? '{t.menuToggleClose}' : '{t.menuToggleOpen}');
+        this.setAttribute('aria-label', isOpen ? 'Open menu' : 'Close menu');
       }
     });
   </script>

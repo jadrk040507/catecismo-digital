@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import svelte from '@astrojs/svelte';
 
 export default defineConfig({
   site: 'https://jadrk040507.github.io/catecismo-digital',
@@ -14,4 +15,6 @@ export default defineConfig({
   build: {
     format: 'directory',
   },
+  integrations: [svelte()],
+  output: 'server',
 });

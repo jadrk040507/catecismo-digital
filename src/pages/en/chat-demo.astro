@@ -1,0 +1,203 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Chat from '../components/Chat.svelte';
+
+const locale = 'en';
+const basePath = '/catecismo-digital';
+
+const title = 'Catechist Chat — Digital Catechism';
+const description = 'Talk to our AI-powered digital catechist. Ask anything about the Catholic faith based on the Catechism of the Catholic Church.';
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="chat-hero">
+    <div class="chat-hero__content">
+      <div class="chat-hero__icon">🤖✨</div>
+      <h1 class="chat-hero__title">Digital Catechist</h1>
+      <p class="chat-hero__subtitle">Your faith companion powered by artificial intelligence</p>
+      <p class="chat-hero__description">
+        Based on the Catechism of the Catholic Church, this assistant can answer questions about faith, morals, sacraments, and spirituality with doctrinal precision.
+      </p>
+    </div>
+  </section>
+
+  <section class="chat-section">
+    <Chat client:load locale={locale} basePath={basePath} />
+  </section>
+
+  <section class="chat-info">
+    <div class="chat-info__grid">
+      <div class="info-card">
+        <div class="info-card__icon">📖</div>
+        <h3 class="info-card__title">CCC Sources</h3>
+        <p class="info-card__text">
+          All responses are based on the Catechism of the Catholic Church (CCC), including exact paragraph references.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card__icon">✝️</div>
+        <h3 class="info-card__title">Catholic Focus</h3>
+        <p class="info-card__text">
+          Designed specifically for Catholic faith formation, distinguishing between defined doctrine and theological opinion.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card__icon">🔒</div>
+        <h3 class="info-card__title">Doctrinal Accuracy</h3>
+        <p class="info-card__text">
+          Responses that seek fidelity to magisterial teaching, with citations from Sacred Scripture and Tradition.
+        </p>
+      </div>
+    </div>
+
+    <div class="chat-warning">
+      <div class="chat-warning__icon">⚠️</div>
+      <div class="chat-warning__content">
+        <h4 class="chat-warning__title">Important Note</h4>
+        <p class="chat-warning__text">
+          This digital catechist is a support tool, not a substitute for magisterial teaching or the guidance of a priest or catechist. Always verify with the official Catechism of the Catholic Church for any important doctrinal questions.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .chat-hero {
+    padding: 48px 16px 32px;
+    text-align: center;
+    background: linear-gradient(180deg, var(--gold-light, #f5edd6) 0%, var(--bg, #faf9f6) 100%);
+    border-bottom: 1px solid var(--border, #e5e0d6);
+  }
+
+  .chat-hero__icon {
+    font-size: 2.5rem;
+    margin-bottom: 16px;
+  }
+
+  .chat-hero__title {
+    font-family: var(--serif, 'Source Serif 4', Georgia, serif);
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--accent-dark, #8b6914);
+  }
+
+  .chat-hero__subtitle {
+    font-size: 1rem;
+    color: var(--text, #1a1a1a);
+    margin-bottom: 16px;
+  }
+
+  .chat-hero__description {
+    font-size: 0.9rem;
+    color: var(--text-soft, #5a5a5a);
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .chat-section {
+    padding: 32px 16px 48px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .chat-info {
+    padding: 0 16px 48px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .chat-info__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .info-card {
+    background: var(--bg-card, #ffffff);
+    border: 1px solid var(--border, #e5e0d6);
+    border-radius: var(--radius, 12px);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .info-card__icon {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
+  }
+
+  .info-card__title {
+    font-family: var(--serif, 'Source Serif 4', Georgia, serif);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text, #1a1a1a);
+  }
+
+  .info-card__text {
+    font-size: 0.82rem;
+    color: var(--text-soft, #5a5a5a);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .chat-warning {
+    display: flex;
+    gap: 12px;
+    padding: 16px 20px;
+    background: #fff8e1;
+    border: 1px solid #ffcc80;
+    border-radius: var(--radius, 12px);
+  }
+
+  .chat-warning__icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .chat-warning__title {
+    font-family: var(--serif, 'Source Serif 4', Georgia, serif);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #e65100;
+  }
+
+  .chat-warning__text {
+    font-size: 0.82rem;
+    color: var(--text-soft, #5a5a5a);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  @media (min-width: 640px) {
+    .chat-hero {
+      padding: 64px 24px 48px;
+    }
+
+    .chat-hero__title {
+      font-size: 2.2rem;
+    }
+
+    .chat-hero__subtitle {
+      font-size: 1.1rem;
+    }
+
+    .chat-hero__description {
+      font-size: 0.95rem;
+    }
+
+    .chat-section {
+      padding: 48px 24px;
+    }
+
+    .chat-info {
+      padding: 0 24px 64px;
+    }
+  }
+</style>

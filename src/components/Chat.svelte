@@ -230,7 +230,7 @@
                 {msg.content}
               {/if}
             </div>
-            <{#if msg.citations && msg.citations.length > 0}
+            {#if msg.citations && msg.citations.length > 0}
               <div class="chat-message__citations">
                 📖 {formatCitations(msg.citations)}
               </div>

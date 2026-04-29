@@ -1,0 +1,244 @@
+/* Catecismo Digital — Progress Tracking Styles */
+
+/* Continue where you left off banner */
+.continue-banner {
+  background: var(--gold-light);
+  border: 1px solid var(--accent-light);
+  border-radius: var(--radius);
+  margin: 0 auto 24px;
+  max-width: var(--max-w);
+  padding: 0 16px;
+}
+
+.continue-banner__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+}
+
+.continue-banner__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.continue-banner__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-dark);
+}
+
+.continue-banner__title {
+  font-family: var(--serif);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.continue-banner__btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 18px;
+  background: var(--accent);
+  color: white;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.continue-banner__btn:hover {
+  background: var(--accent-dark);
+}
+
+/* Completion bar (section index pages) */
+.progress-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 24px;
+  padding: 12px 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--gold));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.progress-bar__label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+
+/* Lesson completed indicator */
+.progress-completion {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.progress-completion__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg-card);
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.progress-completion__btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.progress-completion__btn--done {
+  background: var(--gold-light);
+  border-color: var(--gold);
+  color: var(--accent-dark);
+}
+
+.progress-completion__btn--done:hover {
+  background: var(--accent-light);
+}
+
+.progress-completion__check {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.progress-completion__check--empty {
+  border: 1.5px solid var(--border);
+  border-radius: 50%;
+}
+
+.progress-completion__check--filled {
+  color: var(--accent);
+}
+
+/* Bookmark button */
+.progress-bookmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  background: var(--bg-card);
+  cursor: pointer;
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+.progress-bookmark:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.progress-bookmark--active {
+  background: var(--gold-light);
+  border-color: var(--gold);
+  color: var(--accent-dark);
+}
+
+.progress-bookmark--active:hover {
+  background: var(--accent-light);
+}
+
+/* Progress controls row in lesson header */
+.progress-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* Completed lesson link style on index pages */
+.lesson-link--done {
+  border-color: var(--gold) !important;
+  background: var(--gold-light) !important;
+}
+
+.lesson-link__status {
+  margin-left: auto;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.lesson-link--done .lesson-link__status {
+  opacity: 1;
+}
+
+.lesson-link__check {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+}
+
+/* Lesson link status (checkmark on index) */
+.index-lesson-check {
+  margin-left: auto;
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .continue-banner__inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .continue-banner__btn {
+    align-self: flex-start;
+  }
+  .progress-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

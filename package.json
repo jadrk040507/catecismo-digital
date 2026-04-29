@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "tinacms dev -c \"astro dev\"",
-    "build": "npm run build:extract && npm run build:tina && astro build",
+    "build": "astro build",
     "build:tina": "tinacms build",
     "build:extract": "node scripts/extract-tina-content.mjs",
     "preview": "astro preview",

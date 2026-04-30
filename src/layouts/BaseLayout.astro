@@ -5,15 +5,17 @@ export interface Props {
 const { title } = Astro.props;
 const path = Astro.url.pathname;
 const isEn = path.startsWith('/en');
-const isRoot = path === '/';
-// Extract section (credo, sacramentos, moral, oracion) from path
-const sections = ['credo', 'sacramentos', 'moral', 'oracion'];
-const foundSection = sections.find(s => path.includes('/' + s + '/'));
-const toggleHref = isRoot || (!isEn && !foundSection)
-  ? '/en/'
-  : isEn
-    ? '/es/' + (foundSection || 'credo') + '/'
-    : '/en/' + (foundSection || 'credo') + '/';
+// Language toggle: preserve full path, just swap /es/ ↔ /en/
+// Spanish home is /, sections are /es/credo/, /es/sacramentos/, etc.
+// English home is /en/, sections are /en/credo/, /en/sacramentos/, etc.
+const toggleHref = (function() {
+  if (path === '/') return '/en/';
+  if (path.startsWith('/es/')) return '/en' + path.slice(3);
+  if (path.startsWith('/en/')) return '/es' + path.slice(3);
+  if (path === '/en') return '/';
+  // fallback
+  return '/en/';
+})();
 const toggleLabel = isEn ? 'ES' : 'EN';
 
 // Translation strings

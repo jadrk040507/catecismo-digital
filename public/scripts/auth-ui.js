@@ -2,13 +2,13 @@
  * Catecismo Digital — Auth UI
  * 
  * Handles the header auth button and user dropdown.
+ * Matches header__link--lang visual style.
  * Uses window.CatecismoAuth for auth state.
  */
 (function () {
   'use strict';
 
   function getLang() {
-    // Check data-lang attribute on html
     var htmlLang = document.documentElement.getAttribute('data-lang');
     if (htmlLang === 'en') return 'en';
     return 'es';
@@ -36,44 +36,37 @@
 
   var authBtn = null;
   var dropdownEl = null;
+  var lang = null;
 
-  // Add auth styles
   function injectStyles() {
     if (document.getElementById('auth-ui-styles')) return;
     var style = document.createElement('style');
     style.id = 'auth-ui-styles';
     style.textContent = [
-      '.auth-btn {',
-      '  display: inline-flex; align-items: center; gap: 8px;',
-      '  padding: 4px 14px; border: 1px solid var(--border);',
-      '  border-radius: 20px; background: var(--bg-card);',
-      '  cursor: pointer; font-family: var(--sans); font-size: .8rem;',
-      '  color: var(--text-soft); text-decoration: none;',
-      '  transition: all .2s; white-space: nowrap; position: relative;',
-      '}',
-      '.auth-btn:hover { border-color: var(--accent); color: var(--accent); }',
-      '.auth-btn__avatar {',
-      '  width: 24px; height: 24px; border-radius: 50%;',
-      '  background: var(--accent); color: white;',
+      '.header__link--auth { position: relative; cursor: pointer; user-select: none; }',
+      '.header__link--auth--logged-in { display: inline-flex; align-items: center; gap: 6px; }',
+      '.header__auth-avatar {',
+      '  width: 20px; height: 20px; border-radius: 50%;',
+      '  background: var(--accent); color: #fff;',
       '  display: flex; align-items: center; justify-content: center;',
-      '  font-size: .7rem; font-weight: 600; flex-shrink: 0;',
+      '  font-size: .65rem; font-weight: 700; flex-shrink: 0; line-height: 1;',
       '}',
-      '.auth-btn__name { max-width: 100px; overflow: hidden; text-overflow: ellipsis; }',
-      '.auth-dropdown {',
-      '  display: none; position: absolute; top: calc(100% + 8px); right: 0;',
+      '.header__auth-name { max-width: 90px; overflow: hidden; text-overflow: ellipsis; }',
+      '.header__auth-dropdown {',
+      '  display: none; position: absolute; top: calc(100% + 6px); right: 0;',
       '  background: var(--bg-card); border: 1px solid var(--border);',
-      '  border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,.08);',
-      '  min-width: 180px; z-index: 120; padding: 6px 0;',
+      '  border-radius: var(--radius); box-shadow: 0 4px 16px rgba(0,0,0,.10);',
+      '  min-width: 180px; z-index: 120; padding: 4px 0;',
       '}',
-      '.auth-dropdown--open { display: block; }',
-      '.auth-dropdown a, .auth-dropdown button {',
+      '.header__auth-dropdown--open { display: block; }',
+      '.header__auth-dropdown a, .header__auth-dropdown button {',
       '  display: block; width: 100%; text-align: left; padding: 8px 16px;',
       '  border: none; background: none; cursor: pointer;',
-      '  font-family: var(--sans); font-size: .82rem; color: var(--text);',
+      '  font-family: inherit; font-size: .82rem; color: var(--text);',
       '  text-decoration: none; transition: background .15s;',
       '}',
-      '.auth-dropdown a:hover, .auth-dropdown button:hover { background: var(--gold-light); }',
-      '.auth-dropdown__divider {',
+      '.header__auth-dropdown a:hover, .header__auth-dropdown button:hover { background: var(--gold-light); }',
+      '.header__auth-dropdown-divider {',
       '  height: 1px; background: var(--border); margin: 4px 0;',
       '}',
     ].join('\n');
@@ -85,105 +78,75 @@
     return name.charAt(0).toUpperCase();
   }
 
-  function buildLoggedOutUI(lang) {
-    var label = t('login', lang);
-    return '<span>' + label + '</span>';
-  }
-
-  function buildLoggedInUI(profile, lang) {
-    var name = (profile && profile.full_name) || '';
-    var initial = getInitial(name);
-    var displayName = name || (profile && profile.email) || '';
-    if (displayName.length > 15) {
-      displayName = displayName.substring(0, 14) + '…';
-    }
-    var dashboardHtml = '';
-    if (window.CatecismoAuth && window.CatecismoAuth.isAdmin()) {
-      dashboardHtml = '<a href="/dashboard/">' + t('dashboard', lang) + '</a>' +
-        '<div class="auth-dropdown__divider"></div>';
-    }
-    return [
-      '<span class="auth-btn__avatar">' + initial + '</span>',
-      '<span class="auth-btn__name">' + displayName + '</span>',
-    ].join('');
-  }
-
-  function buildDropdownHTML(lang) {
-    var dashboardHtml = '';
-    if (window.CatecismoAuth && window.CatecismoAuth.isAdmin()) {
-      dashboardHtml = '<a href="/dashboard/">' + t('dashboard', lang) + '</a>' +
-        '<div class="auth-dropdown__divider"></div>';
-    }
-    return [
-      '<a href="/es/perfil/">' + t('progress', lang) + '</a>',
-      dashboardHtml,
-      '<button type="button" data-auth-logout>' + t('logout', lang) + '</button>',
-    ].join('');
-  }
-
   function updateUI() {
     if (!authBtn) return;
-
-    var lang = getLang();
+    lang = getLang();
     var isLoggedIn = window.CatecismoAuth && window.CatecismoAuth.isLoggedIn();
-
-    // Clear existing content
-    authBtn.innerHTML = '';
 
     if (isLoggedIn) {
       var sess = window.CatecismoAuth.getSession();
       var profile = sess ? sess.profile : null;
-      authBtn.innerHTML = buildLoggedInUI(profile, lang);
-      authBtn.classList.add('auth-btn--logged-in');
+      var name = (profile && profile.full_name) || (profile && profile.email) || '';
+      if (name.length > 15) name = name.substring(0, 14) + '\u2026';
+      var initial = getInitial(profile && profile.full_name);
+
+      // Show avatar + name
+      authBtn.innerHTML = '<span class="header__auth-avatar">' + initial + '</span>' +
+        '<span class="header__auth-name">' + name + '</span>';
+      authBtn.classList.add('header__link--auth--logged-in');
 
       // Create dropdown
       if (!dropdownEl) {
         dropdownEl = document.createElement('div');
-        dropdownEl.className = 'auth-dropdown';
+        dropdownEl.className = 'header__auth-dropdown';
         authBtn.appendChild(dropdownEl);
       }
-      dropdownEl.innerHTML = buildDropdownHTML(lang);
 
-      // Logout handler
+      var dash = '';
+      if (window.CatecismoAuth.isAdmin()) {
+        dash = '<a href="/dashboard/">' + t('dashboard', lang) + '</a>' +
+          '<div class="header__auth-dropdown-divider"></div>';
+      }
+      dropdownEl.innerHTML = dash +
+        '<a href="/es/perfil/">' + t('progress', lang) + '</a>' +
+        '<div class="header__auth-dropdown-divider"></div>' +
+        '<button type="button" data-auth-logout>' + t('logout', lang) + '</button>';
+
       dropdownEl.querySelector('[data-auth-logout]').addEventListener('click', function (e) {
         e.stopPropagation();
         window.CatecismoAuth.logout().then(function () {
-          dropdownEl.classList.remove('auth-dropdown--open');
+          dropdownEl.classList.remove('header__auth-dropdown--open');
         });
       });
     } else {
-      authBtn.innerHTML = buildLoggedOutUI(lang);
-      authBtn.classList.remove('auth-btn--logged-in');
-      if (dropdownEl) {
-        dropdownEl.remove();
-        dropdownEl = null;
-      }
+      authBtn.innerHTML = t('login', lang);
+      authBtn.classList.remove('header__link--auth--logged-in');
+      if (dropdownEl) { dropdownEl.remove(); dropdownEl = null; }
     }
   }
 
   function onToggleClick(e) {
+    e.preventDefault();
     e.stopPropagation();
     var isLoggedIn = window.CatecismoAuth && window.CatecismoAuth.isLoggedIn();
     if (!isLoggedIn) {
-      // Navigate to login page
-      var lang = getLang();
-      var loginPath = lang === 'en' ? '/en/login/' : '/login/';
+      var loginPath = getLang() === 'en' ? '/en/login/' : '/login/';
       window.location.href = loginPath;
       return;
     }
     if (!dropdownEl) return;
-    var isOpen = dropdownEl.classList.contains('auth-dropdown--open');
+    var isOpen = dropdownEl.classList.contains('header__auth-dropdown--open');
     if (isOpen) {
-      dropdownEl.classList.remove('auth-dropdown--open');
+      dropdownEl.classList.remove('header__auth-dropdown--open');
     } else {
-      dropdownEl.classList.add('auth-dropdown--open');
+      dropdownEl.classList.add('header__auth-dropdown--open');
     }
   }
 
   function onOutsideClick(e) {
-    if (dropdownEl && dropdownEl.classList.contains('auth-dropdown--open')) {
+    if (dropdownEl && dropdownEl.classList.contains('header__auth-dropdown--open')) {
       if (!authBtn.contains(e.target)) {
-        dropdownEl.classList.remove('auth-dropdown--open');
+        dropdownEl.classList.remove('header__auth-dropdown--open');
       }
     }
   }
@@ -191,17 +154,15 @@
   function init() {
     injectStyles();
 
-    // Find the header links container
     var headerLinks = document.querySelector('.header__links');
     if (!headerLinks) return;
 
-    // Create auth button
-    authBtn = document.createElement('div');
-    authBtn.className = 'auth-btn';
+    authBtn = document.createElement('a');
+    authBtn.className = 'header__link header__link--lang header__link--auth';
     authBtn.setAttribute('role', 'button');
     authBtn.setAttribute('tabindex', '0');
+    authBtn.href = '#';
 
-    // Insert before the lang toggle
     var langBtn = headerLinks.querySelector('.header__link--lang');
     if (langBtn) {
       headerLinks.insertBefore(authBtn, langBtn);
@@ -209,20 +170,13 @@
       headerLinks.appendChild(authBtn);
     }
 
-    // Toggle dropdown on click
     authBtn.addEventListener('click', onToggleClick);
-
-    // Close on outside click
     document.addEventListener('click', onOutsideClick);
 
-    // Listen for auth changes
     if (window.CatecismoAuth) {
-      window.CatecismoAuth.onAuthChange(function (event) {
-        updateUI();
-      });
+      window.CatecismoAuth.onAuthChange(function () { updateUI(); });
     }
 
-    // Initial render
     updateUI();
   }
 
@@ -231,5 +185,4 @@
   } else {
     init();
   }
-
 })();

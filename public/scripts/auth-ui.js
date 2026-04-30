@@ -4,6 +4,9 @@
  * Handles the header auth button and user dropdown.
  * Matches header__link--lang visual style.
  * Uses window.CatecismoAuth for auth state.
+ * 
+ * The auth button is now a STATIC element in the HTML (data-auth-button).
+ * This script updates its text/behavior based on auth state.
  */
 (function () {
   'use strict';
@@ -36,7 +39,6 @@
 
   var authBtn = null;
   var dropdownEl = null;
-  var lang = null;
 
   function injectStyles() {
     if (document.getElementById('auth-ui-styles')) return;
@@ -80,7 +82,7 @@
 
   function updateUI() {
     if (!authBtn) return;
-    lang = getLang();
+    var lang = getLang();
     var isLoggedIn = window.CatecismoAuth && window.CatecismoAuth.isLoggedIn();
 
     if (isLoggedIn) {
@@ -94,13 +96,15 @@
       authBtn.innerHTML = '<span class="header__auth-avatar">' + initial + '</span>' +
         '<span class="header__auth-name">' + name + '</span>';
       authBtn.classList.add('header__link--auth--logged-in');
+      authBtn.href = '#';
+
+      // Reset dropdown since innerHTML destroyed it
+      dropdownEl = null;
 
       // Create dropdown
-      if (!dropdownEl) {
-        dropdownEl = document.createElement('div');
-        dropdownEl.className = 'header__auth-dropdown';
-        authBtn.appendChild(dropdownEl);
-      }
+      dropdownEl = document.createElement('div');
+      dropdownEl.className = 'header__auth-dropdown';
+      authBtn.appendChild(dropdownEl);
 
       var dash = '';
       if (window.CatecismoAuth.isAdmin()) {
@@ -119,8 +123,10 @@
         });
       });
     } else {
-      authBtn.innerHTML = t('login', lang);
+      authBtn.textContent = t('login', lang);
       authBtn.classList.remove('header__link--auth--logged-in');
+      var loginPath = getLang() === 'en' ? '/en/login/' : '/login/';
+      authBtn.href = loginPath;
       if (dropdownEl) { dropdownEl.remove(); dropdownEl = null; }
     }
   }
@@ -154,39 +160,48 @@
   function init() {
     injectStyles();
 
-    var headerLinks = document.querySelector('.header__links');
-    if (!headerLinks) return;
-
-    authBtn = document.createElement('a');
-    authBtn.className = 'header__link header__link--lang header__link--auth';
-    authBtn.setAttribute('role', 'button');
-    authBtn.setAttribute('tabindex', '0');
-    authBtn.href = '#';
-
-    var targetEl = document.querySelector('.header__actions');
-    if (!targetEl) {
-      targetEl = document.createElement('div');
-      targetEl.className = 'header__actions';
-      headerLinks.parentNode.insertBefore(targetEl, headerLinks.nextSibling || headerLinks);
+    // Find the static auth button in the HTML
+    authBtn = document.querySelector('[data-auth-button]');
+    if (!authBtn) {
+      // Fallback: try the class-based selector
+      authBtn = document.querySelector('.header__link--auth');
+    }
+    if (!authBtn) {
+      // Not found yet, retry
+      setTimeout(init, 100);
+      return;
     }
 
-    var langBtn = targetEl.querySelector('.header__link--lang');
-    if (langBtn) {
-      targetEl.insertBefore(authBtn, langBtn);
-    } else {
-      targetEl.appendChild(authBtn);
-    }
-
+    // Add click handler
     authBtn.addEventListener('click', onToggleClick);
     document.addEventListener('click', onOutsideClick);
 
+    // Listen for auth state changes
     if (window.CatecismoAuth) {
       window.CatecismoAuth.onAuthChange(function () { updateUI(); });
+      // If CatecismoAuth is already initialized, update immediately
+      if (window.CatecismoAuth.isLoggedIn && window.CatecismoAuth.isLoggedIn()) {
+        updateUI();
+      }
     }
+
+    // Also poll for auth state changes (CatecismoAuth may init async)
+    var pollCount = 0;
+    var pollInterval = setInterval(function () {
+      pollCount++;
+      if (window.CatecismoAuth && window.CatecismoAuth.isLoggedIn && window.CatecismoAuth.isLoggedIn()) {
+        updateUI();
+        clearInterval(pollInterval);
+      }
+      if (pollCount >= 20) { // Stop after 2 seconds
+        clearInterval(pollInterval);
+      }
+    }, 100);
 
     updateUI();
   }
 
+  // Wait for DOM then init
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

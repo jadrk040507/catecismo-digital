@@ -163,14 +163,26 @@ const homeHref = isEn ? '/en/' : '/';
     function show(el) { el.hidden = false; }
     function hide(el) { el.hidden = true; }
 
-    // Check access
+    // CatecismoAuth may not be ready yet (supabase-client.js uses defer)
     if (!window.CatecismoAuth) {
-      hide(loadingEl); show(deniedEl);
+      // Wait for it
+      var retryCount = 0;
+      var retryInterval = setInterval(function () {
+        retryCount++;
+        if (window.CatecismoAuth) {
+          clearInterval(retryInterval);
+          initAccess();
+        } else if (retryCount >= 50) {
+          clearInterval(retryInterval);
+          hide(loadingEl); show(deniedEl);
+        }
+      }, 100);
       return;
     }
 
-    // Wait a moment for init to complete
-    function checkAccess() {
+    initAccess();
+
+    function initAccess() {
       if (!window.CatecismoAuth.isAdmin()) {
         hide(loadingEl); show(deniedEl);
         return;
@@ -331,8 +343,41 @@ const homeHref = isEn ? '/en/' : '/';
       }).join('');
     }
 
-    // Wait for CatecismoAuth init
-    setTimeout(checkAccess, 300);
+    // Wait for CatecismoAuth init — profile may still be loading
+    if (window.CatecismoAuth.isLoggedIn() && window.CatecismoAuth.isAdmin()) {
+      initAccess();
+    } else {
+      var checked = false;
+      window.CatecismoAuth.onAuthChange(function () {
+        if (!checked && window.CatecismoAuth.isLoggedIn() && window.CatecismoAuth.isAdmin()) {
+          checked = true;
+          initAccess();
+        }
+      });
+      // Poll: try immediately, force profile refresh if needed
+      var pollCount = 0;
+      function tryAccess() {
+        pollCount++;
+        if (checked) return;
+        if (window.CatecismoAuth.isLoggedIn() && window.CatecismoAuth.isAdmin()) {
+          checked = true;
+          initAccess();
+          return;
+        }
+        // If logged in but not admin yet, force refresh profile
+        if (pollCount === 5 && window.CatecismoAuth.isLoggedIn()) {
+          window.CatecismoAuth.getProfile().then(function (profile) {
+            if (!checked && profile && (profile.role === 'admin' || profile.role === 'super_admin')) {
+              checked = true;
+              initAccess();
+            }
+          }).catch(function () {});
+        }
+        if (pollCount < 80) setTimeout(tryAccess, 100);
+        else { checked = true; initAccess(); }
+      }
+      tryAccess();
+    }
   })();
 </script>
 

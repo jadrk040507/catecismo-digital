@@ -30,6 +30,7 @@ const t = {
   footerLine2: isEn ? 'Based on the Catechism of the Catholic Church &middot; Directory for Catechesis (2020)' : 'Basado en el Catecismo de la Iglesia Cat\u00f3lica &middot; Directorio para la Catequesis (2020)',
   menuToggleOpen: isEn ? 'Open menu' : 'Abrir men\u00fa',
   menuToggleClose: isEn ? 'Close menu' : 'Cerrar men\u00fa',
+  login: isEn ? 'Login' : 'Ingresar',
   siteDescription: isEn ? 'Free, clear, and deep Catholic catechesis for all ages' : 'Catequesis cat\u00f3lica gratuita, clara y profunda para todas las edades',
 };
 const homePrefix = isEn ? '/en/' : '/';
@@ -69,6 +70,7 @@ const linkPrefix = isEn ? '/en' : '/es';
         <a href={linkPrefix + '/oracion/'} class="header__link" set:html={t.menuPrayer}></a>
       </div>
       <div class="header__actions">
+        <a href="#" class="header__link header__link--lang header__link--auth" role="button" tabindex="0" data-auth-button>{t.login}</a>
         <a href={toggleHref} class="header__link header__link--lang">{toggleLabel}</a>
       </div>
     </nav>
@@ -86,7 +88,110 @@ const linkPrefix = isEn ? '/en' : '/es';
   </footer>
 
   <script src="/scripts/supabase-client.js" defer></script>
-  <script src="/scripts/auth-ui.js" defer></script>
+  <script is:inline>
+(function () {
+  'use strict';
+
+  function getLang() {
+    return document.documentElement.getAttribute('data-lang') === 'en' ? 'en' : 'es';
+  }
+
+  var L = {
+    es: { login: 'Ingresar', logout: 'Cerrar sesión', progress: 'Mi Progreso', dashboard: 'Dashboard' },
+    en: { login: 'Login', logout: 'Log out', progress: 'My Progress', dashboard: 'Dashboard' }
+  };
+  function t(key, lang) { lang = lang || getLang(); return (L[lang] && L[lang][key]) || L.es[key] || key; }
+
+  var authBtn = null, dropdownEl = null;
+
+  if (!document.getElementById('auth-ui-styles')) {
+    var style = document.createElement('style');
+    style.id = 'auth-ui-styles';
+    style.textContent = '.header__link--auth{position:relative;cursor:pointer;user-select:none}.header__link--auth--logged-in{display:inline-flex;align-items:center;gap:6px}.header__auth-avatar{width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;flex-shrink:0;line-height:1}.header__auth-name{max-width:90px;overflow:hidden;text-overflow:ellipsis}.header__auth-dropdown{display:none;position:absolute;top:calc(100% + 6px);right:0;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 4px 16px rgba(0,0,0,.1);min-width:180px;z-index:120;padding:4px 0}.header__auth-dropdown--open{display:block}.header__auth-dropdown a,.header__auth-dropdown button{display:block;width:100%;text-align:left;padding:8px 16px;border:none;background:none;cursor:pointer;font-family:inherit;font-size:.82rem;color:var(--text);text-decoration:none;transition:background .15s}.header__auth-dropdown a:hover,.header__auth-dropdown button:hover{background:var(--gold-light)}.header__auth-dropdown-divider{height:1px;background:var(--border);margin:4px 0}';
+    document.head.appendChild(style);
+  }
+
+  function getInitial(name) { return name ? name.charAt(0).toUpperCase() : '?'; }
+
+  function updateUI() {
+    if (!authBtn) return;
+    var lang = getLang();
+    var loggedIn = window.CatecismoAuth && window.CatecismoAuth.isLoggedIn && window.CatecismoAuth.isLoggedIn();
+    if (loggedIn) {
+      var sess = window.CatecismoAuth.getSession();
+      var profile = sess ? sess.profile : null;
+      var name = (profile && profile.full_name) || (profile && profile.email) || '';
+      if (name.length > 15) name = name.substring(0, 14) + '\u2026';
+      var initial = getInitial(profile && profile.full_name);
+      authBtn.innerHTML = '<span class="header__auth-avatar">' + initial + '</span><span class="header__auth-name">' + name + '</span>';
+      authBtn.classList.add('header__link--auth--logged-in');
+      authBtn.href = '#';
+      dropdownEl = null;
+      dropdownEl = document.createElement('div');
+      dropdownEl.className = 'header__auth-dropdown';
+      authBtn.appendChild(dropdownEl);
+      var dash = window.CatecismoAuth.isAdmin() ? '<a href="/dashboard/">' + t('dashboard', lang) + '</a><div class="header__auth-dropdown-divider"></div>' : '';
+      dropdownEl.innerHTML = dash + '<a href="/es/perfil/">' + t('progress', lang) + '</a><div class="header__auth-dropdown-divider"></div><button type="button" data-auth-logout>' + t('logout', lang) + '</button>';
+      dropdownEl.querySelector('[data-auth-logout]').addEventListener('click', function (e) {
+        e.stopPropagation();
+        window.CatecismoAuth.logout().then(function () { dropdownEl.classList.remove('header__auth-dropdown--open'); });
+      });
+    } else {
+      authBtn.textContent = t('login', lang);
+      authBtn.classList.remove('header__link--auth--logged-in');
+      authBtn.href = getLang() === 'en' ? '/en/login/' : '/login/';
+      if (dropdownEl) { dropdownEl.remove(); dropdownEl = null; }
+    }
+  }
+
+  function onToggleClick(e) {
+    e.preventDefault(); e.stopPropagation();
+    if (!(window.CatecismoAuth && window.CatecismoAuth.isLoggedIn && window.CatecismoAuth.isLoggedIn())) {
+      window.location.href = getLang() === 'en' ? '/en/login/' : '/login/';
+      return;
+    }
+    if (!dropdownEl) return;
+    var isOpen = dropdownEl.classList.contains('header__auth-dropdown--open');
+    if (isOpen) dropdownEl.classList.remove('header__auth-dropdown--open');
+    else dropdownEl.classList.add('header__auth-dropdown--open');
+  }
+
+  function onOutsideClick(e) {
+    if (dropdownEl && dropdownEl.classList.contains('header__auth-dropdown--open') && !authBtn.contains(e.target)) {
+      dropdownEl.classList.remove('header__auth-dropdown--open');
+    }
+  }
+
+  function init() {
+    authBtn = document.querySelector('[data-auth-button]') || document.querySelector('.header__link--auth');
+    if (!authBtn) { setTimeout(init, 50); return; }
+    authBtn.addEventListener('click', onToggleClick);
+    document.addEventListener('click', onOutsideClick);
+
+    function tryUpdate() {
+      if (window.CatecismoAuth && window.CatecismoAuth.isLoggedIn && window.CatecismoAuth.isLoggedIn()) {
+        updateUI(); return true;
+      }
+      return false;
+    }
+
+    if (window.CatecismoAuth) {
+      window.CatecismoAuth.onAuthChange(function () { updateUI(); });
+    }
+
+    if (!tryUpdate()) {
+      var count = 0;
+      var iv = setInterval(function () {
+        count++;
+        if (tryUpdate() || count >= 50) clearInterval(iv);
+      }, 100);
+    }
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+  </script>
   <script src="/scripts/progress.js" defer></script>
   <script src="/scripts/continue-banner.js" defer></script>
   <script src="/scripts/section-progress.js" defer></script>

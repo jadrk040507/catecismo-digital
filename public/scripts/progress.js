@@ -14,7 +14,7 @@
   'use strict';
 
   // ---- Configuration ----
-  var API_URL = 'https://catecismo.kipadmon.com/api';
+  var API_URL = 'https://catecismo-api.kipadmon.com';
   var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc3NTA4ODQwfQ.BHnZVRxCzClKL5_NwdgNG_RbXIYilL_a69YLqVWkj2k';
   var STORAGE_KEY = 'cat_progress_v1';
   var AUTH_KEY = 'cat_auth_v1';
@@ -64,6 +64,7 @@
   }
 
   var _refreshToken = null;
+  var _migratedToAccount = false; // track whether we migrated anon→account
 
   function apiPost(path, body, auth) {
     var headers = {
@@ -195,6 +196,87 @@
     } catch (e) {}
   }
 
+  /**
+   * Check if CatecismoAuth is loaded and user is logged in (email+password).
+   * If so, we use their authenticated session instead of anonymous.
+   */
+  function useAuthenticatedMode() {
+    return !!(window.CatecismoAuth && window.CatecismoAuth.isLoggedIn());
+  }
+
+  /**
+   * Authenticated API call via CatecismoAuth.
+   * Falls back to anonymous if not logged in.
+   */
+  function authApiPost(path, body) {
+    if (useAuthenticatedMode()) {
+      return window.CatecismoAuth.apiPost('/rest' + path, body);
+    }
+    return authPost('/rest' + path, body);
+  }
+
+  /**
+   * Migrate anonymous progress into the authenticated account.
+   * Called when user logs in while already having anonymous progress.
+   */
+  function migrateToAccount() {
+    if (_migratedToAccount) return Promise.resolve();
+    if (!useAuthenticatedMode()) return Promise.resolve();
+
+    var local = loadLocal();
+    if (local.completed.length === 0 && local.bookmarks.length === 0) {
+      _migratedToAccount = true;
+      return Promise.resolve();
+    }
+
+    var toSync = {};
+    local.completed.forEach(function (p) {
+      toSync[p] = toSync[p] || {};
+      toSync[p].completed = true;
+    });
+    local.bookmarks.forEach(function (p) {
+      toSync[p] = toSync[p] || {};
+      toSync[p].bookmarked = true;
+    });
+
+    var paths = Object.keys(toSync);
+    if (paths.length === 0) {
+      _migratedToAccount = true;
+      return Promise.resolve();
+    }
+
+    function syncOne(i) {
+      if (i >= paths.length) {
+        _migratedToAccount = true;
+        return Promise.resolve();
+      }
+      var p = paths[i];
+      var d = toSync[p];
+      return authApiPost('/rpc/upsert_progress', {
+        p_lesson_path: p,
+        p_completed: d.completed || false,
+        p_bookmarked: d.bookmarked || false,
+      }).then(function () { return syncOne(i + 1); })
+        .catch(function () { return syncOne(i + 1); });
+    }
+
+    return syncOne(0);
+  }
+
+  // Listen for login events to trigger migration
+  if (window.CatecismoAuth) {
+    window.CatecismoAuth.onAuthChange(function (event) {
+      if (event.type === 'login') {
+        migrateToAccount();
+      }
+    });
+  }
+  window.addEventListener('load', function () {
+    if (useAuthenticatedMode()) {
+      migrateToAccount();
+    }
+  });
+
   // ---- Sync: localStorage → Supabase ----
   function migrateToSupabase() {
     if (_migrated) return Promise.resolve();
@@ -239,7 +321,7 @@
       }
       var p = paths[i];
       var d = toSync[p];
-      return authPost('/rest/rpc/upsert_progress', {
+      return authApiPost('/rpc/upsert_progress', {
         p_lesson_path: p,
         p_completed: d.completed || false,
         p_bookmarked: d.bookmarked || false,
@@ -262,7 +344,7 @@
     saveLocal(data);
 
     // Sync to Supabase
-    authPost('/rest/rpc/upsert_progress', {
+    authApiPost('/rpc/upsert_progress', {
       p_lesson_path: lessonPath,
       p_completed: true,
     }).catch(function () {}); // silent fallback
@@ -274,7 +356,7 @@
     data.completed = data.completed.filter(function (p) { return p !== lessonPath; });
     saveLocal(data);
 
-    authPost('/rest/rpc/upsert_progress', {
+    authApiPost('/rpc/upsert_progress', {
       p_lesson_path: lessonPath,
       p_completed: false,
     }).catch(function () {});
@@ -302,7 +384,7 @@
     }
     saveLocal(data);
 
-    authPost('/rest/rpc/upsert_progress', {
+    authApiPost('/rpc/upsert_progress', {
       p_lesson_path: lessonPath,
       p_bookmarked: nowBookmarked,
     }).catch(function () {});
@@ -324,7 +406,7 @@
     data.lastScroll = window.pageYOffset || document.documentElement.scrollTop || 0;
     saveLocal(data);
 
-    authPost('/rest/rpc/upsert_progress', {
+    authApiPost('/rpc/upsert_progress', {
       p_lesson_path: lessonPath,
       p_scroll_y: data.lastScroll,
     }).catch(function () {});
@@ -362,33 +444,41 @@
     } catch (e) {}
   }
 
+  // Try authenticated (CatecismoAuth) first, fall back to anonymous
+  function ensureAccess() {
+    if (useAuthenticatedMode()) return Promise.resolve();
+    if (!_token) return ensureAuth();
+    return Promise.resolve();
+  }
+
   /**
    * Load progress from Supabase into localStorage (on page load).
-   * Call this once after auth is ready.
+   * Uses authenticated mode when available, anonymous otherwise.
    */
   function syncFromSupabase() {
-    return ensureAuth().then(function (auth) {
-      if (!auth.token) return;
-      return migrateToSupabase().then(function () {
-        // Fetch all progress for current user from Supabase
-        return authPost('/rest/rpc/get_progress').catch(function () { return []; });
-      }).then(function (rows) {
-        if (!rows || !rows.length) return;
-        var data = loadLocal();
-        rows.forEach(function (r) {
-          if (r.completed && data.completed.indexOf(r.lesson_path) === -1) {
-            data.completed.push(r.lesson_path);
-          } else if (!r.completed) {
-            data.completed = data.completed.filter(function (p) { return p !== r.lesson_path; });
-          }
-          if (r.bookmarked && data.bookmarks.indexOf(r.lesson_path) === -1) {
-            data.bookmarks.push(r.lesson_path);
-          } else if (!r.bookmarked) {
-            data.bookmarks = data.bookmarks.filter(function (p) { return p !== r.lesson_path; });
-          }
-        });
-        saveLocal(data);
+    return ensureAccess().then(function () {
+      if (useAuthenticatedMode()) {
+        return migrateToAccount();
+      }
+      return migrateToSupabase();
+    }).then(function () {
+      return authApiPost('/rpc/get_progress').catch(function () { return []; });
+    }).then(function (rows) {
+      if (!rows || !rows.length) return;
+      var data = loadLocal();
+      rows.forEach(function (r) {
+        if (r.completed && data.completed.indexOf(r.lesson_path) === -1) {
+          data.completed.push(r.lesson_path);
+        } else if (!r.completed) {
+          data.completed = data.completed.filter(function (p) { return p !== r.lesson_path; });
+        }
+        if (r.bookmarked && data.bookmarks.indexOf(r.lesson_path) === -1) {
+          data.bookmarks.push(r.lesson_path);
+        } else if (!r.bookmarked) {
+          data.bookmarks = data.bookmarks.filter(function (p) { return p !== r.lesson_path; });
+        }
       });
+      saveLocal(data);
     }).catch(function () {
       // Offline — localStorage is the source of truth
     });

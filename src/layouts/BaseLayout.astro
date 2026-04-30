@@ -34,7 +34,7 @@ const homePrefix = isEn ? '/en/' : '/';
 const linkPrefix = isEn ? '/en' : '/es';
 ---
 <!DOCTYPE html>
-<html lang={Astro.currentLocale || (isEn ? 'en' : 'es')}>
+<html lang={Astro.currentLocale || (isEn ? 'en' : 'es')} data-lang={isEn ? 'en' : 'es'}>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -81,6 +81,8 @@ const linkPrefix = isEn ? '/en' : '/es';
     </div>
   </footer>
 
+  <script src="/scripts/supabase-client.js" defer></script>
+  <script src="/scripts/auth-ui.js" defer></script>
   <script src="/scripts/progress.js" defer></script>
   <script src="/scripts/continue-banner.js" defer></script>
   <script src="/scripts/section-progress.js" defer></script>

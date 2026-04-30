@@ -1,0 +1,439 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const path = Astro.url.pathname;
+const isEn = path.startsWith('/en');
+
+const t = {
+  title: 'Dashboard',
+  denied: isEn ? 'Access denied. You need admin privileges.' : 'Acceso denegado. Necesitas privilegios de administrador.',
+  loginPrompt: isEn ? 'Please log in with an admin account.' : 'Por favor inicia sesión con una cuenta de administrador.',
+  loginLink: isEn ? 'Go to login' : 'Ir a iniciar sesión',
+  homeLink: isEn ? 'Back to home' : 'Volver al inicio',
+
+  statsUsers: isEn ? 'Total Users' : 'Usuarios Totales',
+  statsCompleted: isEn ? 'Lessons Completed' : 'Lecciones Completadas',
+  statsActive: isEn ? 'Active Today' : 'Activos Hoy',
+  statsAvgQuiz: isEn ? 'Avg Quiz Score' : 'Promedio Quiz',
+
+  usersTitle: isEn ? 'Users' : 'Usuarios',
+  searchPlaceholder: isEn ? 'Search by name or email…' : 'Buscar por nombre o email…',
+  colName: isEn ? 'Name' : 'Nombre',
+  colEmail: 'Email',
+  colRole: isEn ? 'Role' : 'Rol',
+  colCompleted: isEn ? 'Completed' : 'Completadas',
+  colLastActive: isEn ? 'Last Active' : 'Última Actividad',
+  promoteBtn: isEn ? 'Promote to Admin' : 'Promover a Admin',
+  noUsers: isEn ? 'No users found.' : 'No se encontraron usuarios.',
+
+  lessonsTitle: isEn ? 'Lesson Stats' : 'Estadísticas de Lecciones',
+  colLesson: isEn ? 'Lesson' : 'Lección',
+  colCompletions: isEn ? 'Completions' : 'Veces Completada',
+  colAvgQuizScore: isEn ? 'Avg Quiz' : 'Quiz Promedio',
+  colAvgTime: isEn ? 'Avg Time' : 'Tiempo Promedio',
+  noLessons: isEn ? 'No lesson data available.' : 'No hay datos de lecciones disponibles.',
+
+  loading: isEn ? 'Loading…' : 'Cargando…',
+  error: isEn ? 'Error loading data. Please try again.' : 'Error al cargar datos. Intenta de nuevo.',
+  promoteSuccess: isEn ? 'User promoted to admin!' : '¡Usuario promovido a administrador!',
+  promoteError: isEn ? 'Failed to promote user.' : 'Error al promover usuario.',
+};
+const loginHref = isEn ? '/en/login/' : '/login/';
+const homeHref = isEn ? '/en/' : '/';
+---
+
+<BaseLayout title={t.title}>
+  <div id="dashboard-root">
+    <!-- Loading skeleton -->
+    <div id="dash-loading" class="dash-loading">
+      <div class="dash-skeleton dash-skeleton--title"></div>
+      <div class="dash-stats-grid">
+        <div class="dash-skeleton dash-skeleton--card"></div>
+        <div class="dash-skeleton dash-skeleton--card"></div>
+        <div class="dash-skeleton dash-skeleton--card"></div>
+        <div class="dash-skeleton dash-skeleton--card"></div>
+      </div>
+      <div class="dash-skeleton dash-skeleton--section"></div>
+      <div class="dash-skeleton dash-skeleton--table"></div>
+      <div class="dash-skeleton dash-skeleton--section"></div>
+      <div class="dash-skeleton dash-skeleton--table"></div>
+    </div>
+
+    <!-- Denied state -->
+    <div id="dash-denied" class="dash-denied" hidden>
+      <div class="dash-denied__icon">🔒</div>
+      <h2>{t.denied}</h2>
+      <p>{t.loginPrompt}</p>
+      <div class="dash-denied__links">
+        <a href={loginHref} class="dash-btn dash-btn--primary">{t.loginLink}</a>
+        <a href={homeHref} class="dash-btn">{t.homeLink}</a>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div id="dash-content" hidden>
+      <header class="dash-header">
+        <h1 class="dash-header__title">{t.title}</h1>
+        <span id="dash-user-role" class="dash-header__role"></span>
+      </header>
+
+      <!-- Stats Cards -->
+      <div class="dash-stats-grid">
+        <div class="dash-stat-card">
+          <div class="dash-stat-card__icon">👥</div>
+          <div class="dash-stat-card__value" id="stat-users">—</div>
+          <div class="dash-stat-card__label">{t.statsUsers}</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dash-stat-card__icon">✅</div>
+          <div class="dash-stat-card__value" id="stat-completed">—</div>
+          <div class="dash-stat-card__label">{t.statsCompleted}</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dash-stat-card__icon">📅</div>
+          <div class="dash-stat-card__value" id="stat-active">—</div>
+          <div class="dash-stat-card__label">{t.statsActive}</div>
+        </div>
+        <div class="dash-stat-card">
+          <div class="dash-stat-card__icon">📊</div>
+          <div class="dash-stat-card__value" id="stat-quiz">—</div>
+          <div class="dash-stat-card__label">{t.statsAvgQuiz}</div>
+        </div>
+      </div>
+
+      <!-- Users Section -->
+      <section class="dash-section">
+        <div class="dash-section__header">
+          <h2>{t.usersTitle}</h2>
+          <input type="text" id="user-search" class="dash-search"
+                 placeholder={t.searchPlaceholder} />
+        </div>
+        <div id="dash-error" class="dash-error" hidden>{t.error}</div>
+        <div class="dash-table-wrap">
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>{t.colName}</th>
+                <th>{t.colEmail}</th>
+                <th>{t.colRole}</th>
+                <th>{t.colCompleted}</th>
+                <th>{t.colLastActive}</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="users-tbody">
+              <tr><td colspan="6" class="dash-table__empty">{t.noUsers}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Lessons Section -->
+      <section class="dash-section">
+        <h2 class="dash-section__title">{t.lessonsTitle}</h2>
+        <div class="dash-table-wrap">
+          <table class="dash-table">
+            <thead>
+              <tr>
+                <th>{t.colLesson}</th>
+                <th>{t.colCompletions}</th>
+                <th>{t.colAvgQuizScore}</th>
+                <th>{t.colAvgTime}</th>
+              </tr>
+            </thead>
+            <tbody id="lessons-tbody">
+              <tr><td colspan="4" class="dash-table__empty">{t.noLessons}</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var isEn = window.location.pathname.startsWith('/en');
+
+    var loadingEl = document.getElementById('dash-loading');
+    var deniedEl = document.getElementById('dash-denied');
+    var contentEl = document.getElementById('dash-content');
+    var errorEl = document.getElementById('dash-error');
+
+    function show(el) { el.hidden = false; }
+    function hide(el) { el.hidden = true; }
+
+    // Check access
+    if (!window.CatecismoAuth) {
+      hide(loadingEl); show(deniedEl);
+      return;
+    }
+
+    // Wait a moment for init to complete
+    function checkAccess() {
+      if (!window.CatecismoAuth.isAdmin()) {
+        hide(loadingEl); show(deniedEl);
+        return;
+      }
+
+      hide(loadingEl); hide(deniedEl); show(contentEl);
+
+      var sess = window.CatecismoAuth.getSession();
+      if (sess && sess.profile) {
+        var roleLabel = sess.profile.role === 'super_admin' ? 'Super Admin' : 'Admin';
+        document.getElementById('dash-user-role').textContent = roleLabel;
+      }
+
+      loadData();
+    }
+
+    function apiPost(path, body) {
+      return window.CatecismoAuth.apiPost('/rest' + path, body);
+    }
+
+    function loadData() {
+      // Load users
+      apiPost('/rpc/admin_get_users').then(function (users) {
+        renderUsers(users || []);
+      }).catch(function (e) {
+        errorEl.textContent = isEn
+          ? 'Error loading users: ' + e.message
+          : 'Error al cargar usuarios: ' + e.message;
+        show(errorEl);
+      });
+
+      // Load lesson stats
+      apiPost('/rpc/admin_get_lesson_stats').then(function (lessons) {
+        renderLessons(lessons || []);
+      }).catch(function (e) {
+        if (!errorEl.hidden) return;
+        errorEl.textContent = isEn
+          ? 'Error loading lesson stats: ' + e.message
+          : 'Error al cargar estadísticas: ' + e.message;
+        show(errorEl);
+      });
+
+      /*
+      // Load user stats for cards
+      apiPost('/rpc/get_user_stats').then(function (stats) {
+        if (stats && stats.length > 0) {
+          var s = stats[0];
+          document.getElementById('stat-completed').textContent = s.completed_lessons || 0;
+          document.getElementById('stat-quiz').textContent = s.total_quiz_avg
+            ? Math.round(s.total_quiz_avg) + '%' : '—';
+        }
+      }).catch(function () {});
+      */
+    }
+
+    function renderUsers(users) {
+      document.getElementById('stat-users').textContent = users.length;
+      
+      // Calculate active today
+      var today = new Date().toISOString().substring(0, 10);
+      var activeToday = users.filter(function (u) {
+        return u.last_active_at && u.last_active_at.substring(0, 10) === today;
+      }).length;
+      document.getElementById('stat-active').textContent = activeToday;
+
+      var totalCompleted = users.reduce(function (sum, u) {
+        return sum + (u.total_completed || 0);
+      }, 0);
+      document.getElementById('stat-completed').textContent = totalCompleted;
+
+      var allScores = users.filter(function (u) { return u.avg_quiz_score != null; });
+      var avgScore = allScores.length > 0
+        ? Math.round(allScores.reduce(function (s, u) { return s + u.avg_quiz_score; }, 0) / allScores.length)
+        : null;
+      document.getElementById('stat-quiz').textContent = avgScore != null ? avgScore + '%' : '—';
+
+      var tbody = document.getElementById('users-tbody');
+      if (!users.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="dash-table__empty">' +
+          (isEn ? 'No users found.' : 'No se encontraron usuarios.') + '</td></tr>';
+        return;
+      }
+
+      var isSuper = window.CatecismoAuth.isSuperAdmin();
+
+      function _render(list) {
+        tbody.innerHTML = list.map(function (u) {
+          var roleBadge = u.role;
+          var promoteBtn = '';
+          if (isSuper && u.role === 'user') {
+            promoteBtn = '<button class="dash-btn dash-btn--sm" data-promote="' +
+              u.id + '">' + (isEn ? 'Promote' : 'Promover') + '</button>';
+          }
+          var lastActive = u.last_active_at
+            ? new Date(u.last_active_at).toLocaleDateString(isEn ? 'en-US' : 'es-MX')
+            : '—';
+          return '<tr>' +
+            '<td>' + (u.full_name || '—') + '</td>' +
+            '<td class="dash-table__email">' + (u.email || '—') + '</td>' +
+            '<td><span class="dash-badge dash-badge--' + u.role + '">' + roleBadge + '</span></td>' +
+            '<td>' + (u.total_completed || 0) + '</td>' +
+            '<td>' + lastActive + '</td>' +
+            '<td>' + promoteBtn + '</td>' +
+            '</tr>';
+        }).join('');
+
+        // Promote buttons
+        tbody.querySelectorAll('[data-promote]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var userId = btn.getAttribute('data-promote');
+            apiPost('/rpc/admin_promote_user', { p_user_id: userId }).then(function () {
+              btn.textContent = '✓';
+              btn.disabled = true;
+              // Reload after a moment
+              setTimeout(loadData, 500);
+            }).catch(function (e) {
+              alert(isEn ? 'Failed to promote: ' + e.message : 'Error al promover: ' + e.message);
+            });
+          });
+        });
+      }
+
+      _render(users);
+
+      // Search filter
+      document.getElementById('user-search').addEventListener('input', function () {
+        var q = this.value.toLowerCase().trim();
+        if (!q) { _render(users); return; }
+        var filtered = users.filter(function (u) {
+          return (u.full_name || '').toLowerCase().indexOf(q) !== -1 ||
+                 (u.email || '').toLowerCase().indexOf(q) !== -1;
+        });
+        _render(filtered);
+      });
+    }
+
+    function renderLessons(lessons) {
+      var tbody = document.getElementById('lessons-tbody');
+      if (!lessons.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="dash-table__empty">' +
+          (isEn ? 'No lesson data available.' : 'No hay datos de lecciones disponibles.') + '</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = lessons.map(function (l) {
+        var avgTime = l.avg_time_min != null
+          ? Math.round(l.avg_time_min) + ' min'
+          : '—';
+        var avgScore = l.avg_quiz_score != null
+          ? Math.round(l.avg_quiz_score) + '%'
+          : '—';
+        return '<tr>' +
+          '<td>' + (l.lesson_path || l.topic_title || '—') + '</td>' +
+          '<td>' + (l.completions || 0) + '</td>' +
+          '<td>' + avgScore + '</td>' +
+          '<td>' + avgTime + '</td>' +
+          '</tr>';
+      }).join('');
+    }
+
+    // Wait for CatecismoAuth init
+    setTimeout(checkAccess, 300);
+  })();
+</script>
+
+<style>
+  .dash-loading { padding: 32px 24px; max-width: var(--max-w); margin: 0 auto; }
+  .dash-skeleton {
+    background: linear-gradient(90deg, var(--border) 0%, #eee 50%, var(--border) 100%);
+    background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius-sm);
+  }
+  .dash-skeleton--title { height: 32px; width: 180px; margin-bottom: 24px; }
+  .dash-skeleton--card { height: 100px; }
+  .dash-skeleton--section { height: 24px; width: 120px; margin: 32px 0 16px; }
+  .dash-skeleton--table { height: 200px; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  .dash-stats-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px;
+  }
+  @media (max-width: 768px) { .dash-stats-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .dash-stats-grid { grid-template-columns: 1fr; } }
+
+  /* Denied state */
+  .dash-denied { text-align: center; padding: 80px 24px; }
+  .dash-denied__icon { font-size: 3rem; margin-bottom: 16px; }
+  .dash-denied h2 { font-family: var(--serif); font-size: 1.4rem; color: var(--text); margin-bottom: 8px; }
+  .dash-denied p { color: var(--text-soft); margin-bottom: 24px; }
+  .dash-denied__links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* Header */
+  .dash-header { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+  .dash-header__title { font-family: var(--serif); font-size: 1.6rem; font-weight: 600; margin: 0; }
+  .dash-header__role { font-size: .72rem; background: var(--accent); color: white; padding: 3px 10px; border-radius: 12px; text-transform: uppercase; letter-spacing: .04em; font-weight: 600; }
+
+  /* Content */
+  #dash-content { padding: 32px 24px 64px; max-width: var(--max-w); margin: 0 auto; }
+
+  /* Stats Cards */
+  .dash-stat-card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px; text-align: center;
+    box-shadow: 0 1px 4px rgba(0,0,0,.03); transition: box-shadow .2s;
+  }
+  .dash-stat-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,.06); }
+  .dash-stat-card__icon { font-size: 1.5rem; margin-bottom: 8px; }
+  .dash-stat-card__value { font-family: var(--sans); font-size: 1.8rem; font-weight: 700; color: var(--text); }
+  .dash-stat-card__label { font-size: .78rem; color: var(--text-muted); margin-top: 4px; }
+
+  /* Buttons */
+  .dash-btn {
+    display: inline-block; padding: 8px 18px; border: 1px solid var(--border);
+    border-radius: var(--radius-sm); background: var(--bg-card); color: var(--text);
+    font-family: var(--sans); font-size: .82rem; cursor: pointer; text-decoration: none;
+    transition: all .15s;
+  }
+  .dash-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .dash-btn--primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .dash-btn--primary:hover { background: var(--accent-dark); }
+  .dash-btn--sm { padding: 4px 12px; font-size: .75rem; border-color: var(--accent); color: var(--accent); }
+  .dash-btn--sm:hover { background: var(--accent); color: white; }
+  .dash-btn--sm:disabled { opacity: .5; cursor: default; }
+
+  /* Sections */
+  .dash-section { margin-top: 36px; }
+  .dash-section__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 12px; }
+  .dash-section__header h2, .dash-section__title { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; margin: 0 0 14px 0; color: var(--text); }
+
+  .dash-search {
+    padding: 7px 14px; border: 1px solid var(--border); border-radius: 20px;
+    font-family: var(--sans); font-size: .82rem; color: var(--text); background: var(--bg);
+    width: 240px; max-width: 100%;
+  }
+  .dash-search:focus { outline: none; border-color: var(--accent); }
+
+  .dash-error {
+    background: #fef2f2; color: #991b1b; padding: 10px 14px; border-radius: var(--radius-sm);
+    font-size: .82rem; margin-bottom: 14px; border: 1px solid #fecaca;
+  }
+
+  /* Table */
+  .dash-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-card); }
+  .dash-table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+  .dash-table th {
+    text-align: left; padding: 12px 16px; font-weight: 600; color: var(--text-soft);
+    font-size: .75rem; text-transform: uppercase; letter-spacing: .04em;
+    border-bottom: 1px solid var(--border); background: var(--bg); white-space: nowrap;
+  }
+  .dash-table td {
+    padding: 10px 16px; border-bottom: 1px solid var(--border); color: var(--text);
+  }
+  .dash-table tr:last-child td { border-bottom: none; }
+  .dash-table tr:hover td { background: var(--gold-light); }
+  .dash-table__email { color: var(--text-muted); font-size: .8rem; }
+  .dash-table__empty { text-align: center; color: var(--text-muted); padding: 32px !important; }
+  .dash-table__empty:hover { background: var(--bg-card) !important; }
+
+  /* Badges */
+  .dash-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 10px;
+    font-size: .72rem; font-weight: 600; text-transform: uppercase; letter-spacing: .03em;
+  }
+  .dash-badge--super_admin { background: #fef3c7; color: #92400e; }
+  .dash-badge--admin { background: #dbeafe; color: #1e40af; }
+  .dash-badge--user { background: var(--border); color: var(--text-muted); }
+</style>

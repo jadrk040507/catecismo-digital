@@ -1,0 +1,268 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const path = Astro.url.pathname;
+const isEn = path.startsWith('/en');
+
+const t = {
+  title: isEn ? 'Create Account' : 'Crear Cuenta',
+  fullName: isEn ? 'Full name' : 'Nombre completo',
+  email: isEn ? 'Email' : 'Correo electrónico',
+  password: isEn ? 'Password' : 'Contraseña',
+  confirmPassword: isEn ? 'Confirm password' : 'Confirmar contraseña',
+  submit: isEn ? 'Create account' : 'Crear cuenta',
+  hasAccount: isEn ? 'Already have an account?' : '¿Ya tienes cuenta?',
+  login: isEn ? 'Sign in' : 'Iniciar sesión',
+  pwMinLength: isEn ? 'At least 6 characters' : 'Mínimo 6 caracteres',
+  pwMismatch: isEn ? 'Passwords do not match' : 'Las contraseñas no coinciden',
+  validationFill: isEn ? 'Please fill in all fields.' : 'Por favor completa todos los campos.',
+  genericError: isEn ? 'An error occurred. Please try again.' : 'Ocurrió un error. Intenta de nuevo.',
+};
+const loginHref = isEn ? '/en/login/' : '/login/';
+const isRegistered = new URL(Astro.url).searchParams.get('registered') !== null;
+---
+
+<BaseLayout title={t.title}>
+  <div class="auth-page">
+    <div class="auth-card">
+      <h1 class="auth-card__title">{t.title}</h1>
+
+      {isRegistered && (
+        <div class="auth-form__success">
+          {isEn
+            ? 'Account created successfully! Please sign in.'
+            : '¡Cuenta creada exitosamente! Inicia sesión.'}
+        </div>
+      )}
+
+      <form id="register-form" class="auth-form" novalidate>
+        <div class="auth-form__field">
+          <label for="fullName" class="auth-form__label">{t.fullName}</label>
+          <input type="text" id="fullName" name="fullName" class="auth-form__input"
+                 autocomplete="name" required autofocus />
+        </div>
+
+        <div class="auth-form__field">
+          <label for="email" class="auth-form__label">{t.email}</label>
+          <input type="email" id="email" name="email" class="auth-form__input"
+                 autocomplete="email" required />
+        </div>
+
+        <div class="auth-form__field">
+          <label for="password" class="auth-form__label">{t.password}</label>
+          <input type="password" id="password" name="password" class="auth-form__input"
+                 autocomplete="new-password" required minlength="6" />
+          <span class="auth-form__hint">{t.pwMinLength}</span>
+        </div>
+
+        <div class="auth-form__field">
+          <label for="confirmPassword" class="auth-form__label">{t.confirmPassword}</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" class="auth-form__input"
+                 autocomplete="new-password" required minlength="6" />
+        </div>
+
+        <div id="register-error" class="auth-form__error" hidden></div>
+
+        <button type="submit" class="auth-form__submit">{t.submit}</button>
+      </form>
+
+      <p class="auth-card__footer">
+        {t.hasAccount} <a href={loginHref}>{t.login}</a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    var errorMsg = document.getElementById('register-error');
+    var form = document.getElementById('register-form');
+    var submitBtn = form.querySelector('.auth-form__submit');
+    // Detect language from URL path
+    var isEn = window.location.pathname.startsWith('/en');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      errorMsg.hidden = true;
+
+      var fullName = document.getElementById('fullName').value.trim();
+      var email = document.getElementById('email').value.trim();
+      var password = document.getElementById('password').value;
+      var confirmPassword = document.getElementById('confirmPassword').value;
+
+      // Validation
+      if (!fullName || !email || !password || !confirmPassword) {
+        errorMsg.textContent = isEn
+          ? 'Please fill in all fields.'
+          : 'Por favor completa todos los campos.';
+        errorMsg.hidden = false;
+        return;
+      }
+
+      if (!email.includes('@')) {
+        errorMsg.textContent = isEn
+          ? 'Please enter a valid email address.'
+          : 'Por favor ingresa un correo electrónico válido.';
+        errorMsg.hidden = false;
+        return;
+      }
+
+      if (password.length < 6) {
+        errorMsg.textContent = isEn
+          ? 'Password must be at least 6 characters.'
+          : 'La contraseña debe tener al menos 6 caracteres.';
+        errorMsg.hidden = false;
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        errorMsg.textContent = isEn
+          ? 'Passwords do not match.'
+          : 'Las contraseñas no coinciden.';
+        errorMsg.hidden = false;
+        return;
+      }
+
+      if (!window.CatecismoAuth) {
+        errorMsg.textContent = isEn
+          ? 'Auth system not loaded. Please refresh.'
+          : 'Sistema de autenticación no cargado. Refresca la página.';
+        errorMsg.hidden = false;
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = isEn ? 'Creating account…' : 'Creando cuenta…';
+
+      window.CatecismoAuth.signup(email, password, fullName)
+        .then(function () {
+          window.location.href = isEn ? '/en/login/?registered=1' : '/login/?registered=1';
+        })
+        .catch(function (err) {
+          errorMsg.textContent = err.message || (isEn
+            ? 'An error occurred. The email may already be in use.'
+            : 'Ocurrió un error. El correo puede que ya esté en uso.');
+          errorMsg.hidden = false;
+          submitBtn.disabled = false;
+          submitBtn.textContent = isEn ? 'Create account' : 'Crear cuenta';
+        });
+    });
+  })();
+</script>
+
+<style>
+  .auth-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 24px 16px;
+  }
+  .auth-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 2px 12px rgba(0,0,0,.04);
+  }
+  .auth-card__title {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 24px;
+    color: var(--text);
+  }
+  .auth-form__field {
+    margin-bottom: 14px;
+  }
+  .auth-form__label {
+    display: block;
+    font-size: .82rem;
+    font-weight: 500;
+    color: var(--text-soft);
+    margin-bottom: 6px;
+  }
+  .auth-form__hint {
+    display: block;
+    font-size: .72rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+  .auth-form__input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--sans);
+    font-size: .9rem;
+    color: var(--text);
+    background: var(--bg);
+    transition: border-color .2s;
+  }
+  .auth-form__input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--gold-light);
+  }
+  .auth-form__error {
+    background: #fef2f2;
+    color: #991b1b;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: .82rem;
+    margin-bottom: 16px;
+    border: 1px solid #fecaca;
+  }
+  .auth-form__success {
+    background: #f0fdf4;
+    color: #166534;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: .82rem;
+    margin-bottom: 16px;
+    border: 1px solid #bbf7d0;
+  }
+  .auth-form__submit {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--sans);
+    font-size: .92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s;
+    margin-top: 8px;
+  }
+  .auth-form__submit:hover:not(:disabled) {
+    background: var(--accent-dark);
+  }
+  .auth-form__submit:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+  }
+  .auth-card__footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: .82rem;
+    color: var(--text-soft);
+  }
+  .auth-card__footer a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .auth-card__footer a:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 480px) {
+    .auth-card {
+      padding: 24px 18px;
+    }
+  }
+</style>

@@ -17,12 +17,13 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Deploy to VPS via SSH
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          source: "dist/*"
-          target: "/var/www/catecismo"
-          strip_components: 1
+      - name: Deploy to VPS via rsync
+        uses: up9cloud/action-rsync@v1.4
+        env:
+          HOST: ${{ secrets.VPS_HOST }}
+          USER: ${{ secrets.VPS_USER }}
+          KEY: ${{ secrets.VPS_SSH_KEY }}
+          SOURCE: dist/
+          TARGET: /var/www/catecismo/
+          ARGS: -avz --delete
+          POST_SCRIPT: chown -R ubuntu:ubuntu /var/www/catecismo/

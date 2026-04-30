@@ -4,16 +4,16 @@ export interface Props {
 }
 const { title } = Astro.props;
 const path = Astro.url.pathname;
-const isEn = path.startsWith('/catecismo-digital/en');
-const isRoot = path === '/catecismo-digital/' || path === '/catecismo-digital';
+const isEn = path.startsWith('/en');
+const isRoot = path === '/';
 // Extract section (credo, sacramentos, moral, oracion) from path
 const sections = ['credo', 'sacramentos', 'moral', 'oracion'];
 const foundSection = sections.find(s => path.includes('/' + s + '/'));
 const toggleHref = isRoot || (!isEn && !foundSection)
-  ? '/catecismo-digital/en/'
+  ? '/en/'
   : isEn
-    ? '/catecismo-digital/es/' + (foundSection || 'credo') + '/'
-    : '/catecismo-digital/en/' + (foundSection || 'credo') + '/';
+    ? '/es/' + (foundSection || 'credo') + '/'
+    : '/en/' + (foundSection || 'credo') + '/';
 const toggleLabel = isEn ? 'ES' : 'EN';
 
 // Translation strings
@@ -30,8 +30,8 @@ const t = {
   menuToggleClose: isEn ? 'Close menu' : 'Cerrar men\u00fa',
   siteDescription: isEn ? 'Free, clear, and deep Catholic catechesis for all ages' : 'Catequesis cat\u00f3lica gratuita, clara y profunda para todas las edades',
 };
-const homePrefix = isEn ? '/catecismo-digital/en/' : '/catecismo-digital/';
-const linkPrefix = isEn ? '/catecismo-digital/en' : '/catecismo-digital/es';
+const homePrefix = isEn ? '/en/' : '/';
+const linkPrefix = isEn ? '/en' : '/es';
 ---
 <!DOCTYPE html>
 <html lang={Astro.currentLocale || (isEn ? 'en' : 'es')}>
@@ -40,17 +40,17 @@ const linkPrefix = isEn ? '/catecismo-digital/en' : '/catecismo-digital/es';
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title ? title + ' &mdash; ' + t.siteTitle : t.siteTitle}</title>
   <meta name="description" content={t.siteDescription} />
-  <link rel="icon" type="image/svg+xml" href="/catecismo-digital/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/catecismo-digital/styles/global.css" />
-  <link rel="stylesheet" href="/catecismo-digital/styles/progress.css" />
+  <link rel="stylesheet" href="/styles/global.css" />
+  <link rel="stylesheet" href="/styles/progress.css" />
 </head>
 <body>
   <header class="header">
     <nav class="header__nav">
-      <a href="/catecismo-digital/" class="header__logo">
+      <a href="/" class="header__logo">
         <span class="header__logo-icon">+</span>
         <span set:html={t.siteTitle}></span>
       </a>
@@ -76,14 +76,14 @@ const linkPrefix = isEn ? '/catecismo-digital/en' : '/catecismo-digital/es';
 
   <footer class="footer">
     <div class="footer__inner">
-      <p class="footer__text" set:html={t.footerLine1 + ' <a href="https://github.com/jadrk040507/catecismo-digital" class="footer__link">GitHub</a>'}></p>
+      <p class="footer__text" set:html={t.footerLine1 + ' <a href="https://github.com/jadrk040507/" class="footer__link">GitHub</a>'}></p>
       <p class="footer__text footer__text--small" set:html={t.footerLine2}></p>
     </div>
   </footer>
 
-  <script src="/catecismo-digital/scripts/progress.js" defer></script>
-  <script src="/catecismo-digital/scripts/continue-banner.js" defer></script>
-  <script src="/catecismo-digital/scripts/section-progress.js" defer></script>
+  <script src="/scripts/progress.js" defer></script>
+  <script src="/scripts/continue-banner.js" defer></script>
+  <script src="/scripts/section-progress.js" defer></script>
   <script is:inline>
     document.querySelector('[data-toggle-menu]')?.addEventListener('click', function() {
       var nav = this.closest('.header__nav');

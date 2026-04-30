@@ -2,8 +2,8 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://jadrk040507.github.io/catecismo-digital',
-  base: '/catecismo-digital',
+  site: 'https://catecismo.kipadmon.com',
+  base: '/',
   trailingSlash: 'always',
   i18n: {
     defaultLocale: 'es',

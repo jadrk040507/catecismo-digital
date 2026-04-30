@@ -14,7 +14,7 @@
   'use strict';
 
   // ---- Configuration ----
-  var API_URL = 'https://catecismo-api.kipadmon.com';
+  var API_URL = 'https://catecismo.kipadmon.com/api';
   var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlzcyI6InN1cGFiYXNlIiwiaWF0IjoxNzc3NTA4ODQwfQ.BHnZVRxCzClKL5_NwdgNG_RbXIYilL_a69YLqVWkj2k';
   var STORAGE_KEY = 'cat_progress_v1';
   var AUTH_KEY = 'cat_auth_v1';

@@ -34,6 +34,8 @@ body{
 .header__logo{display:flex;align-items:center;gap:6px;text-decoration:none;color:var(--text);font-weight:600;font-size:.95rem}
 .header__logo-icon{font-size:1.2rem;color:var(--accent)}
 .header__links{display:flex;gap:12px;align-items:center}
+.header__actions{display:flex;gap:8px;align-items:center}
+.header__actions .header__link--lang{pointer-events:auto}
 .header__link{text-decoration:none;color:var(--text-soft);font-size:.8rem;font-weight:500;transition:color .2s;white-space:nowrap}
 .header__link:hover{color:var(--accent)}
 .header__link--lang{font-weight:600;padding:1px 6px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:.75rem}
@@ -48,6 +50,8 @@ body{
   .header__toggle{display:flex}
   .header__links{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg-card);flex-direction:column;justify-content:center;align-items:center;gap:24px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:105}
   .header__links--open{opacity:1;pointer-events:auto}
+  .header__actions{position:relative;z-index:111;display:flex;gap:8px;align-items:center;margin-left:auto;margin-right:48px}
+  .header__actions .header__link--lang{font-size:.75rem;padding:1px 6px}
   .header__link{font-size:1.8rem}
   .header__link--lang{font-size:1.4rem;padding:10px 22px}
   .header__links{gap:32px}

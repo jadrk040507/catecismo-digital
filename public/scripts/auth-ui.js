@@ -163,11 +163,18 @@
     authBtn.setAttribute('tabindex', '0');
     authBtn.href = '#';
 
-    var langBtn = headerLinks.querySelector('.header__link--lang');
+    var targetEl = document.querySelector('.header__actions');
+    if (!targetEl) {
+      targetEl = document.createElement('div');
+      targetEl.className = 'header__actions';
+      headerLinks.parentNode.insertBefore(targetEl, headerLinks.nextSibling || headerLinks);
+    }
+
+    var langBtn = targetEl.querySelector('.header__link--lang');
     if (langBtn) {
-      headerLinks.insertBefore(authBtn, langBtn);
+      targetEl.insertBefore(authBtn, langBtn);
     } else {
-      headerLinks.appendChild(authBtn);
+      targetEl.appendChild(authBtn);
     }
 
     authBtn.addEventListener('click', onToggleClick);

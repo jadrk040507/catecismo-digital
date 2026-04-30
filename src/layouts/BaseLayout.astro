@@ -67,6 +67,8 @@ const linkPrefix = isEn ? '/en' : '/es';
         <a href={linkPrefix + '/sacramentos/'} class="header__link" set:html={t.menuSacraments}></a>
         <a href={linkPrefix + '/moral/'} class="header__link" set:html={t.menuMoral}></a>
         <a href={linkPrefix + '/oracion/'} class="header__link" set:html={t.menuPrayer}></a>
+      </div>
+      <div class="header__actions">
         <a href={toggleHref} class="header__link header__link--lang">{toggleLabel}</a>
       </div>
     </nav>

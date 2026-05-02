@@ -6,6 +6,7 @@ import svelte from '@astrojs/svelte';
 export default defineConfig({
   site: 'https://catecismo.kipadmon.com',
   base: '/',
+  output: 'static',
   trailingSlash: 'always',
   i18n: {
     defaultLocale: 'es',

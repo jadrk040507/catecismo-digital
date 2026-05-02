@@ -15,6 +15,7 @@
     "tinacms": "tinacms"
   },
   "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
     "@tinacms/cli": "^2.2.4",
     "@tinacms/datalayer": "^2.0.17",
     "@tinacms/graphql": "^2.2.5",

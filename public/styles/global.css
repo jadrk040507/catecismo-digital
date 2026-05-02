@@ -22,11 +22,74 @@
   --raiz: #e65100;
   --arbol: #6a1b9a;
 }
+/* Dark mode */
+[data-theme="dark"] {
+  --bg: #1a1a1a;
+  --bg-card: #2a2a2a;
+  --text: #e0e0e0;
+  --text-soft: #b0b0b0;
+  --text-muted: #808080;
+  --accent: #d4a017;
+  --accent-light: #3a3520;
+  --accent-dark: #f0d060;
+  --border: #3a3a3a;
+  --gold: #d4a017;
+  --gold-light: #2a2820;
+  --semilla: #4caf50;
+  --brotes: #42a5f5;
+  --raiz: #ff9800;
+  --arbol: #ab47bc;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1a1a1a;
+    --bg-card: #2a2a2a;
+    --text: #e0e0e0;
+    --text-soft: #b0b0b0;
+    --text-muted: #808080;
+    --accent: #d4a017;
+    --accent-light: #3a3520;
+    --accent-dark: #f0d060;
+    --border: #3a3a3a;
+    --gold: #d4a017;
+    --gold-light: #2a2820;
+    --semilla: #4caf50;
+    --brotes: #42a5f5;
+    --raiz: #ff9800;
+    --arbol: #ab47bc;
+  }
+}
+/* Dark mode theme toggle button */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: .8rem;
+  padding: 1px 6px;
+  color: var(--text-soft);
+  transition: all .2s;
+  line-height: 1;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:15px;scroll-behavior:smooth} /* smaller base for mobile */
 body{
   font-family:var(--sans);background:var(--bg);color:var(--text);
   line-height:1.7;-webkit-font-smoothing:antialiased;overflow-x:hidden
+}
+/* Accessibility: skip-to-content */
+.skip-link {
+  position: absolute; top: -100px; left: 16px;
+  background: var(--accent); color: #fff; padding: 8px 16px;
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  z-index: 200; font-weight: 600; font-size: .85rem; text-decoration: none;
+  transition: top .2s;
+}
+.skip-link:focus { top: 0; }
+/* Focus visible styles for keyboard navigation */
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px;
 }
 /* Header */
 .header{border-bottom:1px solid var(--border);background:var(--bg-card);position:sticky;top:0;z-index:100}

@@ -43,6 +43,18 @@ const linkPrefix = isEn ? '/en' : '/es';
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{title ? title + ' &mdash; ' + t.siteTitle : t.siteTitle}</title>
   <meta name="description" content={t.siteDescription} />
+  <!-- Open Graph / Social Sharing -->
+  <meta property="og:title" content={title ? title + ' — ' + t.siteTitle : t.siteTitle} />
+  <meta property="og:description" content={t.siteDescription} />
+  <meta property="og:url" content={new URL(Astro.url.pathname, 'https://catecismo.kipadmon.com').href} />
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content={isEn ? 'en_US' : 'es_MX'} />
+  <meta property="og:site_name" content={t.siteTitle} />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={title ? title + ' — ' + t.siteTitle : t.siteTitle} />
+  <meta name="twitter:description" content={t.siteDescription} />
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -51,6 +63,7 @@ const linkPrefix = isEn ? '/en' : '/es';
   <link rel="stylesheet" href="/styles/progress.css" />
 </head>
 <body>
+  <a href="#main-content" class="skip-link">{isEn ? 'Skip to content' : 'Saltar al contenido'}</a>
   <header class="header">
     <nav class="header__nav">
       <a href="/" class="header__logo">
@@ -70,13 +83,14 @@ const linkPrefix = isEn ? '/en' : '/es';
         <a href={linkPrefix + '/oracion/'} class="header__link" set:html={t.menuPrayer}></a>
       </div>
       <div class="header__actions">
+        <button class="theme-toggle" id="theme-toggle" aria-label={isEn ? 'Toggle dark mode' : 'Alternar modo oscuro'} title={isEn ? 'Dark/light mode' : 'Modo oscuro/claro'}>🌓</button>
         <a href="#" class="header__link header__link--lang header__link--auth" role="button" tabindex="0" data-auth-button>{t.login}</a>
         <a href={toggleHref} class="header__link header__link--lang">{toggleLabel}</a>
       </div>
     </nav>
   </header>
 
-  <main class="main">
+  <main class="main" id="main-content">
     <slot />
   </main>
 
@@ -88,6 +102,27 @@ const linkPrefix = isEn ? '/en' : '/es';
   </footer>
 
   <script src="/scripts/supabase-client.js" defer></script>
+  <script is:inline>
+    // Dark mode toggle
+    (function() {
+      const btn = document.getElementById('theme-toggle');
+      if (!btn) return;
+      const html = document.documentElement;
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark') html.setAttribute('data-theme', 'dark');
+      else if (saved === 'light') html.setAttribute('data-theme', 'light');
+      btn.addEventListener('click', function() {
+        const current = html.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+      });
+    })();
+    // PWA service worker registration
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(function() {});
+    }
+  </script>
   <script is:inline>
 (function () {
   'use strict';

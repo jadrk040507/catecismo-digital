@@ -1,0 +1,190 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const path = Astro.url.pathname;
+const isEn = path.startsWith('/en');
+
+const t = {
+  title: isEn ? 'My Progress' : 'Mi Progreso',
+  subtitle: isEn ? 'Track your catechesis journey' : 'Sigue tu camino de catequesis',
+  loginPrompt: isEn ? 'Log in to see your badges and progress.' : 'Inicia sesión para ver tus insignias y progreso.',
+  loginBtn: isEn ? 'Log in' : 'Iniciar sesión',
+  earned: isEn ? 'Earned Badges' : 'Insignias Ganadas',
+  locked: isEn ? 'Locked Badges' : 'Insignias Bloqueadas',
+  progress: isEn ? 'Overall Progress' : 'Progreso General',
+  lessons: isEn ? 'lessons completed' : 'lecciones completadas',
+  outOf: isEn ? 'out of' : 'de',
+  loading: isEn ? 'Loading your progress…' : 'Cargando tu progreso…',
+  error: isEn ? 'Could not load progress. Try logging in again.' : 'No se pudo cargar el progreso. Intenta iniciar sesión de nuevo.',
+};
+const loginHref = isEn ? '/en/login/' : '/login/';
+---
+
+<BaseLayout title={t.title}>
+  <div id="progress-root">
+    <!-- Loading -->
+    <div id="progress-loading" class="progress-loading">
+      <div class="progress-skeleton progress-skeleton--title"></div>
+      <div class="progress-skeleton progress-skeleton--bar"></div>
+      <div class="progress-skeleton-grid">
+        <div class="progress-skeleton progress-skeleton--badge"></div>
+        <div class="progress-skeleton progress-skeleton--badge"></div>
+        <div class="progress-skeleton progress-skeleton--badge"></div>
+        <div class="progress-skeleton progress-skeleton--badge"></div>
+        <div class="progress-skeleton progress-skeleton--badge"></div>
+        <div class="progress-skeleton progress-skeleton--badge"></div>
+      </div>
+    </div>
+
+    <!-- Not logged in -->
+    <div id="progress-login" class="progress-login" hidden>
+      <div class="progress-login__icon">🏅</div>
+      <h2>{t.title}</h2>
+      <p>{t.loginPrompt}</p>
+      <a href={loginHref} class="progress-login__btn">{t.loginBtn}</a>
+    </div>
+
+    <!-- Error -->
+    <div id="progress-error" class="progress-error" hidden>{t.error}</div>
+
+    <!-- Content -->
+    <div id="progress-content" hidden>
+      <header class="progress-header">
+        <h1 class="progress-header__title">{t.title}</h1>
+      </header>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar">
+          <div class="progress-bar__fill" id="progress-fill"></div>
+        </div>
+        <p class="progress-bar__text">
+          <span id="progress-count">0</span> {t.lessons} ({t.outOf} 37)
+        </p>
+      </div>
+
+      <section class="progress-section">
+        <h2>{t.earned}</h2>
+        <div class="badges-grid" id="badges-earned">
+          <p class="badges-empty">{isEn ? 'Keep learning to earn your first badge!' : '¡Sigue aprendiendo para ganar tu primera insignia!'}</p>
+        </div>
+      </section>
+
+      <section class="progress-section" id="badges-locked-section">
+        <h2>{t.locked}</h2>
+        <div class="badges-grid badges-grid--locked" id="badges-locked">
+        </div>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+(function() {
+  const isEn = window.location.pathname.startsWith('/en');
+  const BADGE_DEFS = [
+    { id:'primer-paso', name:isEn?'First Step':'Primer Paso', desc:isEn?'Complete your first lesson':'Completa tu primera lección', icon:'🌱', req:1, color:'#2e7d32' },
+    { id:'catecumeno', name:isEn?'Catechumen':'Catecúmeno', desc:isEn?'Complete 5 lessons':'Completa 5 lecciones', icon:'📖', req:5, color:'#1565c0' },
+    { id:'estudiante-fiel', name:isEn?'Faithful Student':'Estudiante Fiel', desc:isEn?'Complete 10 lessons':'Completa 10 lecciones', icon:'✨', req:10, color:'#e65100' },
+    { id:'discipulo-dedicado', name:isEn?'Dedicated Disciple':'Discípulo Dedicado', desc:isEn?'Complete 20 lessons':'Completa 20 lecciones', icon:'📚', req:20, color:'#6a1b9a' },
+    { id:'maestro-en-formacion', name:isEn?'Master in Training':'Maestro en Formación', desc:isEn?'Complete 30 lessons':'Completa 30 lecciones', icon:'🎓', req:30, color:'#c9a84c' },
+    { id:'siervo-de-la-palabra', name:isEn?'Servant of the Word':'Siervo de la Palabra', desc:isEn?'Complete all 37 lessons':'Completa las 37 lecciones', icon:'👑', req:37, color:'#b8860b' },
+    { id:'pilar-credo', name:isEn?'Pillar of Creed':'Pilar del Credo', desc:isEn?'Complete all Creed lessons':'Completa las lecciones del Credo', icon:'✝️', req:'credo', color:'#2e7d32' },
+    { id:'pilar-sacramentos', name:isEn?'Pillar of Sacraments':'Pilar de Sacramentos', desc:isEn?'Complete all Sacrament lessons':'Completa las lecciones de Sacramentos', icon:'💧', req:'sacramentos', color:'#1565c0' },
+    { id:'pilar-moral', name:isEn?'Pillar of Moral':'Pilar de Moral', desc:isEn?'Complete all Moral lessons':'Completa las lecciones de Moral', icon:'⚖️', req:'moral', color:'#e65100' },
+    { id:'pilar-oracion', name:isEn?'Pillar of Prayer':'Pilar de Oración', desc:isEn?'Complete all Prayer lessons':'Completa las lecciones de Oración', icon:'🙏', req:'oracion', color:'#6a1b9a' },
+  ];
+
+  function renderBadges(completed) {
+    const earned = [], locked = [];
+    const total = completed.length;
+
+    BADGE_DEFS.forEach(b => {
+      const earned_it = typeof b.req === 'number' ? total >= b.req : completed.filter(c => c.startsWith(b.req)).length >= 3;
+      (earned_it ? earned : locked).push(b);
+    });
+
+    const earnedGrid = document.getElementById('badges-earned');
+    earnedGrid.innerHTML = earned.length
+      ? earned.map(b => `<div class="badge-card badge-card--earned" style="--badge-color:${b.color}"><span class="badge-card__icon">${b.icon}</span><span class="badge-card__name">${b.name}</span><span class="badge-card__desc">${b.desc}</span></div>`).join('')
+      : `<p class="badges-empty">${isEn ? 'Keep learning to earn your first badge!' : '¡Sigue aprendiendo para ganar tu primera insignia!'}</p>`;
+
+    const lockedGrid = document.getElementById('badges-locked');
+    lockedGrid.innerHTML = locked.length
+      ? locked.map(b => `<div class="badge-card badge-card--locked"><span class="badge-card__icon">🔒</span><span class="badge-card__name">${b.name}</span><span class="badge-card__desc">${b.desc}</span></div>`).join('')
+      : '';
+
+    document.getElementById('badges-locked-section').hidden = locked.length === 0;
+
+    const pct = Math.min(100, Math.round((total / 37) * 100));
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-count').textContent = total;
+  }
+
+  function init() {
+    if (!window.CatecismoAuth || !window.CatecismoAuth.isLoggedIn()) {
+      document.getElementById('progress-loading').hidden = true;
+      document.getElementById('progress-login').hidden = false;
+      return;
+    }
+    document.getElementById('progress-loading').hidden = true;
+    document.getElementById('progress-content').hidden = false;
+
+    const sess = window.CatecismoAuth.getSession();
+    if (!sess || !sess.profile) {
+      document.getElementById('progress-content').hidden = true;
+      document.getElementById('progress-error').hidden = false;
+      return;
+    }
+    const completed = sess.profile.completed_lessons || [];
+    renderBadges(completed);
+  }
+
+  function waitForAuth() {
+    if (window.CatecismoAuth) { init(); return; }
+    let c = 0;
+    const iv = setInterval(function() { c++; if (window.CatecismoAuth) { clearInterval(iv); init(); } else if (c >= 50) { clearInterval(iv); document.getElementById('progress-loading').hidden = true; document.getElementById('progress-login').hidden = false; } }, 100);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', waitForAuth);
+  else waitForAuth();
+})();
+</script>
+
+<style>
+  .progress-loading, .progress-content { max-width: var(--max-w); margin: 0 auto; }
+  .progress-skeleton { background: linear-gradient(90deg, var(--border) 0%, #eee 50%, var(--border) 100%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius-sm); }
+  .progress-skeleton--title { height: 32px; width: 200px; margin-bottom: 24px; }
+  .progress-skeleton--bar { height: 20px; width: 100%; margin-bottom: 32px; }
+  .progress-skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .progress-skeleton--badge { height: 90px; }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  .progress-login { text-align: center; padding: 60px 24px; }
+  .progress-login__icon { font-size: 3rem; margin-bottom: 16px; }
+  .progress-login h2 { font-family: var(--serif); font-size: 1.4rem; margin-bottom: 8px; }
+  .progress-login p { color: var(--text-soft); margin-bottom: 20px; }
+  .progress-login__btn { display: inline-block; background: var(--accent); color: #fff; padding: 10px 24px; border-radius: var(--radius-sm); text-decoration: none; font-weight: 600; font-size: .9rem; }
+
+  .progress-error { text-align: center; padding: 40px; color: #b91c1c; }
+
+  .progress-header { margin-bottom: 28px; }
+  .progress-header__title { font-family: var(--serif); font-size: 1.5rem; }
+
+  .progress-bar-wrap { margin-bottom: 36px; }
+  .progress-bar { height: 16px; background: var(--border); border-radius: 8px; overflow: hidden; }
+  .progress-bar__fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--gold)); border-radius: 8px; transition: width .5s ease; width: 0; }
+  .progress-bar__text { margin-top: 8px; font-size: .82rem; color: var(--text-soft); }
+
+  .progress-section { margin-top: 36px; }
+  .progress-section h2 { font-family: var(--serif); font-size: 1.1rem; margin-bottom: 16px; }
+
+  .badges-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .badge-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; text-align: center; transition: transform .2s; }
+  .badge-card--earned:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,.08); }
+  .badge-card--locked { opacity: .5; filter: grayscale(60%); }
+  .badge-card__icon { display: block; font-size: 1.8rem; margin-bottom: 8px; }
+  .badge-card--earned .badge-card__icon { filter: drop-shadow(0 2px 4px var(--badge-color)); }
+  .badge-card__name { display: block; font-weight: 600; font-size: .82rem; color: var(--text); margin-bottom: 2px; }
+  .badge-card__desc { display: block; font-size: .72rem; color: var(--text-muted); line-height: 1.3; }
+
+  .badges-empty { color: var(--text-muted); font-size: .9rem; text-align: center; grid-column: 1 / -1; padding: 24px; }
+</style>

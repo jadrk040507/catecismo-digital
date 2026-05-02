@@ -16,11 +16,13 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",
+    "@astrojs/svelte": "^8.1.0",
     "@tinacms/cli": "^2.2.4",
     "@tinacms/datalayer": "^2.0.17",
     "@tinacms/graphql": "^2.2.5",
     "astro": "^6.1.9",
     "puppeteer": "^24.42.0",
+    "svelte": "^5.55.5",
     "tinacms": "^3.7.4"
   }
 }

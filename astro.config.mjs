@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import svelte from '@astrojs/svelte';
 
 // https://astro.build/config
 export default defineConfig({
@@ -21,5 +22,5 @@ export default defineConfig({
       defaultLocale: 'es',
       locales: { es: 'es-MX', en: 'en-US' }
     }
-  })]
+  }), svelte()]
 });
